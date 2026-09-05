@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>开个游戏公司 V2.0</title>
+<style>
+/* ============ 基础 ============ */
+:root{--ink:#1d2a3d;--paper:#f5f0e3;--card:#fffaf0;--line:#cfbd98;--blue:#315d8e;--gold:#d6a94b;--aqua:#3f9e7c;--orange:#e07a3f;--pink:#d8607a;--muted:#6f6a5c;--navy:#1c2d4b;
+--c-code:#4c89e9;--c-art:#ed7b8a;--c-music:#e0a23e;--c-idea:#52af9f}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px ui-rounded,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.45}
+button,input,select,textarea{font:inherit}
+button{min-height:40px;cursor:pointer;border:1px solid #d4c7a8;border-radius:8px;padding:8px 12px;background:#efe6d2;color:var(--ink);font-weight:800;box-shadow:0 2px 0 #c9b98f}
+button:hover{filter:brightness(.97)}button:active{transform:translateY(1px);box-shadow:0 1px 0 #c9b98f}
+button:disabled{opacity:.42;cursor:not-allowed;transform:none}
+.primary{background:var(--blue);color:#fff;border-color:#264a72;box-shadow:0 2px 0 #1d3a5c}
+.orange{background:var(--orange);color:#fff;border-color:#b45f2c;box-shadow:0 2px 0 #9c4f21}
+.gold{background:var(--gold);color:#3a2a08;border-color:#b78c33;box-shadow:0 2px 0 #a37a28}
+.danger{background:#fff0f1;color:#c33d59;border-color:#e6b9c1}
+.ghost{background:transparent;border-color:transparent;box-shadow:none}
+.hidden{display:none!important}
+small{font-size:12px}
+h2,h3{margin:0 0 8px}h2{font-size:16px}h3{font-size:14px}
+.tag{display:inline-block;background:#efe6d2;color:#5d5340;border-radius:99px;padding:2px 8px;font-size:11px;font-weight:800;vertical-align:middle}
+.tag.blue{background:#e1eaf5;color:#2b4d78}.tag.gold{background:#fff0bd;color:#7a5510}.tag.red{background:#ffe3e6;color:#a53548}.tag.green{background:#dff2e8;color:#2f6f55}
+.muted{color:var(--muted)}
+.hint{background:#f5ecd7;border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:7px;padding:9px 11px;font-size:12px;line-height:1.55;margin:10px 0}
+.empty{text-align:center;color:var(--muted);padding:20px 10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.split{display:flex;align-items:center;gap:8px}.split .grow{flex:1;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.bar{height:10px;background:#e8dfc6;border-radius:99px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--aqua),#7dd3b8);border-radius:99px;transition:width .5s}
+.card{background:var(--card);border:2px solid var(--line);border-radius:10px;box-shadow:0 4px 0 #7d694422}
+.section{padding:14px;margin-bottom:12px}
+.record{border:1px solid var(--line);border-radius:10px;padding:11px;margin:8px 0;background:#fffdf7}
+.record p{font-size:12px;color:var(--muted);margin:5px 0}
+.choice{border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;background:#fffdf7}
+.choice h3{margin:0 0 4px}.choice p{margin:0 0 8px;font-size:12px;color:var(--muted)}
+.choice.dim{opacity:.5}
+.scene-text{background:#203c70;color:#fff;border-radius:10px;padding:11px;font-size:12px;line-height:1.55}.scene-text b{color:#ffe094}
+.grid-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}
+.stat{padding:10px 12px;min-height:70px}.stat label{font-size:12px;color:var(--muted)}.stat b{display:block;font-size:19px;margin:5px 0 2px;white-space:nowrap}.stat small{color:var(--aqua)}
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:7px}
+.mini div{border-radius:9px;background:#f3ecda;padding:8px;color:var(--muted);font-size:11px}.mini b{display:block;font-size:16px;color:var(--ink);margin-top:2px;white-space:nowrap}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.tabs button{min-height:36px;padding:6px 10px}.tabs button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.portfolio{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.rank{display:grid;grid-template-columns:34px 1fr auto;gap:8px;padding:8px 0;border-bottom:1px solid #eadfca;align-items:center}
+.rank small{color:var(--muted)}
+.hbar{display:grid;grid-template-columns:120px 1fr auto;gap:8px;align-items:center;font-size:12px;margin:6px 0}
+.hbar div{height:10px;background:#efe6cf;border-radius:6px;overflow:hidden}.hbar div i{display:block;height:100%;background:var(--blue);border-radius:6px}
+.hbar.me div i{background:var(--gold)}
+/* ============ 顶栏与布局 ============ */
+.app{max-width:1440px;margin:auto;padding:12px}
+.top{display:flex;align-items:center;gap:14px;padding:9px 14px;border:2px solid #9cb0c7;border-bottom:4px solid #718aa6;border-radius:10px;background:#fff;box-shadow:0 4px 0 #26365720;position:sticky;top:7px;z-index:4;min-height:62px}
+.brand{display:flex;gap:9px;align-items:center;min-width:200px}
+.logo{width:38px;height:38px;border-radius:8px;background:#eb7e63;box-shadow:inset -4px -4px 0 #d95f65;display:grid;place-items:center;color:#fff;font-size:20px}
+.brand b{display:block;font-size:16px}.brand small{display:block;color:var(--muted)}
+.clock{font-weight:900;color:var(--blue);white-space:nowrap}
+.trend{flex:1;min-width:0;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+.speed{display:flex;flex:none;gap:4px;align-items:center}
+.speed:before{content:attr(data-state);font-size:10px;color:var(--muted);white-space:nowrap;margin-right:3px}
+.speed button{min-height:36px;padding:6px 9px;min-width:40px}.speed button.active{background:var(--ink);color:#fff;border-color:var(--ink);outline:2px solid #f0c768;outline-offset:1px}
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr) 290px;gap:12px;margin-top:12px}
+.side{padding:8px;height:max-content;position:sticky;top:84px}
+.nav{display:flex;align-items:center;width:100%;gap:9px;text-align:left;background:transparent;border-color:transparent;box-shadow:none;margin:2px 0}
+.nav.active{background:#e9e0c8;border-color:var(--line)}
+.nav em{font-style:normal;margin-left:auto;font-size:11px;background:#e7ddc4;color:var(--muted);border-radius:9px;padding:2px 6px}
+.side hr{border:0;border-top:1px solid var(--line);margin:9px 0}
+.feed{padding:12px}.feed h3{margin:0 0 8px}
+.feedlist{max-height:calc(100vh - 220px);overflow:auto}
+.news{border-bottom:1px solid #eadfca;padding:8px 0;line-height:1.42;font-size:12px}.news:last-child{border:0}.news b{display:block;color:#294f91}.news small{color:var(--muted);font-size:11px}
+.warning{background:#fff9df;border-color:#f2dfa3;padding:12px;margin-bottom:10px}.warning h3{margin:0 0 7px}.warning p{margin:0 0 9px;line-height:1.55;font-size:12px}
+.bottomnav{display:none}
+/* ============ 总览页 ============ */
+.home{display:grid;grid-template-columns:500px minmax(0,1fr);gap:12px;align-items:start}
+.office-card{width:500px;max-width:100%;padding:0;overflow:hidden;background:var(--navy);border-color:#213c66}
+.office-head{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;background:#fff;color:var(--ink)}
+.office-head b{font-size:15px}.office-head small{color:var(--muted)}
+#officeCanvas{display:block;width:100%;height:auto;aspect-ratio:480/280;image-rendering:pixelated;image-rendering:crisp-edges;cursor:pointer;background:#ead5aa}
+.scene-note{padding:8px 13px;background:#1b3155;color:#dbeaff;font-size:12px;border-top:3px solid var(--gold)}.scene-note b{color:#ffe49a}
+.dash{display:grid;gap:10px}
+.panel{padding:12px}
+.ops{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.ops button{min-width:0;min-height:44px;font-size:12px;padding:6px 4px;white-space:nowrap}
+/* 项目卡 */
+.pcard{border:2px solid #c9b580;border-radius:10px;padding:11px;margin:8px 0;background:linear-gradient(180deg,#fffdf7,#fff8e9)}
+.pcard .head{display:flex;justify-content:space-between;align-items:center;gap:8px}.pcard .head h3{margin:0}.pcard .head b{color:var(--blue)}
+.pcard small{color:var(--muted)}
+.qbars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.qbar{background:#f3ecda;border-radius:8px;padding:6px 7px;font-size:11px;color:var(--muted)}
+.qbar b{display:block;font-size:15px;color:var(--ink);line-height:1.1}
+.qbar i{display:block;height:6px;border-radius:4px;background:#e2d8bf;margin-top:4px;overflow:hidden;position:relative}
+.qbar i:after{content:'';position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);background:var(--c);border-radius:4px;transition:width .5s}
+.qbar.code{--c:var(--c-code)}.qbar.art{--c:var(--c-art)}.qbar.music{--c:var(--c-music)}.qbar.idea{--c:var(--c-idea)}
+.devlog{background:#f7f2e5;border-radius:8px;padding:7px 9px;margin-top:8px;font-size:11px;color:#5d5340;line-height:1.5;max-height:82px;overflow:auto}
+.devlog span{display:block}.devlog span:first-child{color:var(--ink);font-weight:800}
+.pcard .btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.pcard .btns button{min-height:36px;padding:6px 10px;font-size:12px}
+/* 员工 */
+.person{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;background:#fffdf7}
+.avatar{height:42px;width:42px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:18px;flex:none;box-shadow:inset -3px -3px 0 #0002;font-weight:900}
+.person main{min-width:0;flex:1}.person h3{margin:0}.person p{margin:3px 0;color:var(--muted);font-size:12px;line-height:1.4}
+.person aside{text-align:right;color:var(--muted);font-size:12px;flex:none}
+.energy{height:5px;background:#e5dcc4;border-radius:10px;overflow:hidden;margin:4px 0}.energy i{display:block;height:100%;background:var(--aqua)}
+.statline{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:6px}
+.statline span{font-size:11px;background:#f3ecda;border-radius:6px;padding:3px 5px;color:var(--muted)}.statline b{color:var(--ink)}
+.person-card{display:grid;grid-template-columns:68px 1fr;gap:12px}
+.portrait{height:68px;width:68px;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:28px;box-shadow:inset -4px -4px 0 #0002}
+.profile-line{font-size:12px;line-height:1.65;color:var(--muted)}.profile-line b{color:var(--ink)}
+.picks{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pick{border:1px solid var(--line);padding:8px;border-radius:10px;display:flex;gap:7px;align-items:center;font-size:12px;background:#fffdf7;cursor:pointer}
+.pick.dim{opacity:.45}.pick small{display:block;color:var(--muted)}
+.job{border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0;background:#fffdf7}.job h3{margin:0 0 4px}.job p{color:var(--muted);font-size:12px;margin:4px 0}
+.facility-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.facility{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fffdf7}.facility b{display:block}.facility small{display:block;color:var(--muted);line-height:1.4;margin:3px 0 7px}
+.inv-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #dfd1b5}.inv-row h3{margin:0 0 4px}.inv-row p{margin:0;color:var(--muted);font-size:12px}
+/* 立项对话框 */
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field label{display:block;font-size:12px;font-weight:900;color:#51627c;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #d4c7a8;border-radius:8px;padding:9px;background:#fff;color:var(--ink)}
+.combo-line{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:10px;font-size:12px}
+.combo-line b{font-size:14px}
+.stars{color:var(--gold);letter-spacing:1px;font-size:14px}.stars.bad{color:#c05050}.stars.unknown{color:#999}
+.dir{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+.dir div{background:#f3ecda;border-radius:9px;padding:8px;text-align:center;font-size:12px;color:var(--muted)}
+.dir b{display:block;font-size:20px;color:var(--ink);line-height:1.1;margin:3px 0}
+.dir .pm{display:flex;justify-content:center;gap:4px}.dir .pm button{min-height:28px;min-width:32px;padding:2px 6px;font-size:14px;line-height:1}
+.dir i{display:block;height:5px;border-radius:4px;background:var(--c);margin-top:6px;opacity:.85}
+.dir .code{--c:var(--c-code)}.dir .art{--c:var(--c-art)}.dir .music{--c:var(--c-music)}.dir .idea{--c:var(--c-idea)}
+.presets{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.presets button{min-height:30px;padding:3px 9px;font-size:11px}
+.weights{font-size:11px;color:var(--muted);margin-top:6px}
+.weights b{color:var(--ink)}
+/* 图鉴 */
+.codex{overflow-x:auto}
+.codex table{border-collapse:separate;border-spacing:3px;font-size:12px;min-width:560px}
+.codex th{font-weight:800;color:var(--muted);padding:4px;white-space:nowrap}.codex th small{display:block;font-weight:400;font-size:10px}
+.codex td{background:#f3ecda;border-radius:6px;text-align:center;padding:6px 3px;min-width:58px;height:40px;cursor:default}
+.codex td.s{background:#ffe9a8}.codex td.a{background:#dff2e8}.codex td.c{background:#ffe0e0}.codex td.b{background:#eee8d8}
+.codex td small{display:block;color:var(--muted);font-size:10px}
+.mastery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:7px}
+.mastery div{background:#fffdf7;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:12px}
+.mastery i{display:block;height:6px;background:#e8dfc6;border-radius:4px;margin-top:5px;overflow:hidden}.mastery i:after{content:'';display:block;height:100%;width:var(--w);background:var(--gold)}
+/* 评测杂志 */
+.mag{background:#1a1d2b;color:#f2ead9;border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.mag:before{content:'REVIEW';position:absolute;right:-6px;top:-16px;font-size:74px;font-weight:1000;color:#ffffff0a;letter-spacing:4px}
+.mag .mh{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-bottom:2px solid #d6a94b;padding-bottom:9px;margin-bottom:12px}
+.mag .mh h1{margin:0;font-size:24px;color:#fff}.mag .mh small{color:#cbbfa4}
+.mag .total{text-align:right}.mag .total b{font-size:38px;color:#ffe18a;line-height:1;display:block}.mag .total small{color:#cbbfa4}
+.critics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.critic{background:#262a3c;border-radius:10px;padding:10px;text-align:center;opacity:0;transform:translateY(10px);transition:.35s}
+.critic.show{opacity:1;transform:none}
+.critic .ico{font-size:26px}.critic .nm{font-size:11px;color:#cbbfa4;margin:3px 0}.critic .sc{font-size:30px;font-weight:1000;color:#fff;line-height:1}
+.critic .sc.hi{color:#ffd76a}.critic .sc.lo{color:#f08a8a}
+.critic .q{font-size:11px;color:#e6dcc7;line-height:1.4;margin-top:6px;min-height:46px}
+.hof{margin-top:12px;background:linear-gradient(90deg,#d6a94b,#ffe18a,#d6a94b);color:#3a2a08;font-weight:1000;text-align:center;padding:9px;border-radius:8px;letter-spacing:2px;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+.reveal-combo{margin-top:10px;background:#2c3149;border-radius:8px;padding:9px;font-size:12px;color:#f2ead9}
+.reveal-combo b{color:#ffe18a}
+/* 报告 */
+.reporthero{background:linear-gradient(135deg,#213d76,#3868c9);color:#fff;padding:16px;border-radius:12px}
+.reporthero h1{margin:2px 0 5px;font-size:24px}.reporthero .score{font-size:40px;font-weight:900;color:#ffe18a}
+.reportgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:11px 0}
+.reportgrid div{background:#f4efe0;padding:9px;border-radius:10px;font-size:12px;color:var(--muted)}.reportgrid b{display:block;color:var(--ink);font-size:16px;margin-top:3px}
+.quote{border-left:3px solid var(--orange);padding:7px 9px;margin:7px 0;background:#fff8f3;font-size:12px;line-height:1.45}
+.chart{width:100%;height:auto;border-radius:10px;border:2px solid #e0d2b2;background:#fffaf0}
+.legend{font-size:11px;color:var(--muted);margin:5px 0 0}
+.award-row{display:grid;grid-template-columns:100px 1fr auto;gap:10px;align-items:center;padding:9px;border-bottom:1px solid #e7d8b8;font-size:13px}
+.award-row.win{background:#fff0bd;border:2px solid var(--gold);border-radius:8px;margin:5px 0}
+.award-row small{text-align:right;color:var(--muted)}
+.grade{font-size:72px;line-height:1;font-weight:1000;color:#d79a35;text-shadow:4px 4px 0 #f4dfa8;text-align:center;margin:10px 0}
+.gold-list li{margin:4px 0}
+/* ============ 对话框 ============ */
+html:has(dialog[open]){overflow:hidden}
+dialog{border:0;padding:0;width:min(720px,calc(100% - 24px));max-height:88vh;max-height:88dvh;border-radius:14px;color:var(--ink);box-shadow:0 25px 80px #17243a60;background:var(--card)}
+dialog[open]{display:flex;flex-direction:column}
+dialog::backdrop{background:#17243a85;backdrop-filter:blur(3px)}
+.dhead{display:flex;flex:none;justify-content:space-between;align-items:center;gap:10px;padding:15px 18px 12px;border-bottom:2px solid var(--line)}
+.dhead h2{flex:1;min-width:0;font-size:18px;margin:0}.dhead>button{flex:none;min-height:34px;padding:4px 10px}
+.dbody{flex:1;min-height:0;padding:14px 18px;overflow:auto;overscroll-behavior:contain}
+.dfoot{display:flex;flex:none;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding:11px 18px;border-top:2px solid var(--line)}
+dialog.wide{width:min(860px,calc(100% - 24px))}
+.toast{position:fixed;z-index:30;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));max-width:calc(100% - 28px);text-align:center;line-height:1.45;transform:translate(-50%,80px);background:#17243a;color:#fff;border-radius:99px;padding:10px 16px;box-shadow:0 10px 30px #0004;transition:.25s;font-size:13px}
+.toast.show{transform:translate(-50%,0)}
+/* ============ 开始页 ============ */
+.start{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 78% 22%,#ffbd76 0,transparent 24%),radial-gradient(circle at 16% 76%,#53cdbd 0,transparent 28%),linear-gradient(135deg,#1d2e5b,#4167c4)}
+.startcard{width:min(740px,100%);padding:40px;border-radius:22px;background:#fffaf0f2;box-shadow:0 30px 80px #14235470;position:relative;overflow:hidden}
+.startcard:after{content:"✦";position:absolute;right:6%;top:-35px;font-size:190px;color:#3267d815}
+.startcard h1{font-size:40px;line-height:1.15;margin:7px 0 12px;position:relative}
+.startcard p{max-width:520px;color:#52617a;line-height:1.7;position:relative}
+.eyebrow{font-weight:900;letter-spacing:2px;color:var(--orange);position:relative}
+.legacy{color:#a6772a;font-weight:800}
+/* ============ 响应式 ============ */
+@media(max-width:1180px){.home{grid-template-columns:1fr}.office-card{margin:auto}.dash{grid-template-columns:1fr 1fr}.dash .panel.wide{grid-column:1/-1}}
+@media(max-width:1050px){.layout{grid-template-columns:190px minmax(0,1fr)}.right{grid-column:1/-1}.feedlist{max-height:240px}.grid-stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){
+ body{font-size:13px;padding-bottom:76px}.app{padding:8px}
+ .top{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'brand speed' 'clock clock';gap:2px 6px;padding:8px 9px;min-height:0}
+ .brand{grid-area:brand;min-width:0;gap:6px}.brand small{display:none}.brand b{font-size:13px}.logo{width:32px;height:32px}
+ .clock{grid-area:clock;font-size:11px}.trend{display:none}.speed{grid-area:speed}.speed:before{display:none}.speed button{min-width:34px;width:34px;padding:4px 2px;font-size:10px}
+ .layout{display:block;margin-top:9px}.side{display:none}.right{display:block}.right>*{margin-bottom:9px}
+ .grid-stats{display:flex;overflow:auto;gap:7px;padding-bottom:3px}.stat{min-width:116px}
+ .section{padding:12px;margin-bottom:9px}
+ .home{display:block}.office-card{width:100%;margin-bottom:9px}.dash{grid-template-columns:1fr}
+ .ops{grid-template-columns:repeat(3,1fr)}.qbars{grid-template-columns:repeat(4,1fr);gap:4px}.qbar{padding:5px}.qbar b{font-size:13px}
+ .two,.form,.picks,.facility-grid{grid-template-columns:1fr}
+ .critics{grid-template-columns:1fr 1fr}.mag .mh h1{font-size:19px}
+ .bottomnav{position:fixed;display:flex;z-index:8;bottom:0;left:0;right:0;height:68px;background:#fffaf0f5;backdrop-filter:blur(8px);border-top:2px solid var(--line);justify-content:space-around;padding:5px calc(4px + env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom)) calc(4px + env(safe-area-inset-left))}
+ .bottomnav button{min-height:48px;flex:1;background:transparent;border-color:transparent;box-shadow:none;font-size:10px;padding:3px 1px;color:var(--muted);min-width:0}
+ .bottomnav button.active{color:var(--blue);background:#e9e0c8}
+ .toast{bottom:calc(80px + env(safe-area-inset-bottom))}
+ .dhead{padding:13px 14px 10px}.dbody{padding:12px 14px}.dfoot{padding:10px 14px calc(10px + env(safe-area-inset-bottom))}.dfoot button{flex:1 1 auto;min-height:44px}
+ dialog.wide{width:100%;height:100%;max-height:100%;border-radius:0}
+ .reportgrid{grid-template-columns:1fr 1fr}.startcard{padding:29px 22px}.startcard h1{font-size:31px}
+ .award-row{grid-template-columns:88px 1fr}.award-row small{grid-column:1/-1;text-align:left}
+ .inv-row{grid-template-columns:1fr}.inv-row button{width:100%}.hbar{grid-template-columns:96px 1fr auto}
+ .person-card{grid-template-columns:56px 1fr}.portrait{height:56px;width:56px}
+ .dir{grid-template-columns:repeat(4,1fr);gap:4px}.dir div{padding:6px 3px}.dir b{font-size:17px}
+}
+</style>
+</head>
+<body>
+<section id="start" class="start"><main class="startcard">
+ <div class="eyebrow">游戏公司经营模拟 · V2.0</div>
+ <h1>开个游戏公司</h1>
+ <p>从三个人和一间小办公室开始：立项、分配开发方向、看着四项品质一点点长起来，等评测杂志出分，再把口碑变成下一款作品的资本。</p>
+ <p id="legacyLine" class="legacy hidden"></p>
+ <div class="actions">
+  <button class="primary" onclick="newGame()">开办新公司</button>
+  <button id="continueBtn" onclick="continueGame()">继续经营</button>
+  <button onclick="openImport()">导入存档</button>
+  <button onclick="openHelp()">经营说明</button>
+ </div>
+</main></section>
+
+<div id="game" class="app hidden">
+ <header class="top">
+  <div class="brand"><div class="logo">◆</div><div><b id="companyName">新星游戏</b><small id="officeName">小型出租办公室</small></div></div>
+  <div id="clock" class="clock"></div>
+  <div id="trendline" class="trend"></div>
+  <div class="speed" data-state="">
+   <button data-s="0" onclick="setSpeed(0)" title="暂停">停</button>
+   <button data-s="1" onclick="setSpeed(1)">1×</button>
+   <button data-s="2" onclick="setSpeed(2)">2×</button>
+   <button data-s="4" onclick="setSpeed(4)">4×</button>
+  </div>
+ </header>
+ <div class="layout">
+  <aside class="card side">
+   <button class="nav active" data-page="home" onclick="page('home')">⌂ 总览</button>
+   <button class="nav" data-page="team" onclick="page('team')">♟ 团队 <em id="teamNum"></em></button>
+   <button class="nav" data-page="market" onclick="page('market')">◈ 市场</button>
+   <button class="nav" data-page="works" onclick="page('works')">▤ 作品</button>
+   <button class="nav" data-page="research" onclick="page('research')">⚗ 研发</button>
+   <button class="nav" data-page="codex" onclick="page('codex')">✦ 图鉴</button>
+   <hr>
+   <button class="nav" onclick="openSystemMenu()">☰ 管理</button>
+   <button class="nav" onclick="openHelp()">? 说明</button>
+  </aside>
+  <main>
+   <div id="page-home"></div>
+   <div id="page-team" class="hidden"></div>
+   <div id="page-market" class="hidden"></div>
+   <div id="page-works" class="hidden"></div>
+   <div id="page-research" class="hidden"></div>
+   <div id="page-codex" class="hidden"></div>
+  </main>
+  <aside class="right">
+   <section id="alert" class="card warning hidden"></section>
+   <section class="card feed"><h3>行业快讯</h3><div id="news" class="feedlist"></div></section>
+  </aside>
+ </div>
+ <nav class="bottomnav">
+  <button data-page="home" class="active" onclick="page('home')">⌂<br>总览</button>
+  <button data-page="team" onclick="page('team')">♟<br>团队</button>
+  <button data-page="market" onclick="page('market')">◈<br>市场</button>
+  <button data-page="works" onclick="page('works')">▤<br>作品</button>
+  <button data-page="research" onclick="page('research')">⚗<br>研发</button>
+  <button data-page="codex" onclick="page('codex')">✦<br>图鉴</button>
+  <button onclick="openSystemMenu()">☰<br>管理</button>
+ </nav>
+</div>
+
+<!-- 通用对话框 -->
+<dialog id="dlg"><div class="dhead"><h2 id="dlgTitle"></h2><button id="dlgClose" onclick="closeDlg()">×</button></div><div id="dlgBody" class="dbody"></div><div id="dlgFoot" class="dfoot"></div></dialog>
+
+<!-- 立项 -->
+<dialog id="projectDialog"><div class="dhead"><h2 id="projectTitle">立项：做一款新游戏</h2><button onclick="closeProjectDialog()">×</button></div>
+<div class="dbody">
+ <div class="form">
+  <div class="field"><label>作品名称</label><input id="pname" maxlength="18" placeholder="例如：月面信使"></div>
+  <div class="field"><label>项目规模</label><select id="psize" onchange="previewProject()"></select></div>
+  <div class="field"><label>游戏类型</label><select id="pgenre" onchange="previewProject()"></select></div>
+  <div class="field"><label>游戏题材</label><select id="ptheme" onchange="previewProject()"></select></div>
+  <div class="field"><label>首发平台</label><select id="pplatform" onchange="previewProject()"></select></div>
+  <div class="field"><label>营销投入</label><select id="pmarketing" onchange="previewProject()"><option value="0">克制宣传 · ¥0</option><option value="45000">小范围预热 · ¥4.5万</option><option value="110000">媒体投放 · ¥11万</option><option value="240000">全渠道宣发 · ¥24万</option></select></div>
+  <div class="field"><label>发行方式</label><select id="ppublisher" onchange="previewProject()"><option value="独立发行">独立发行 · 保留全部发行收入</option><option value="星河发行">星河发行 · 触达 +32%，分成 18%</option></select></div>
+ </div>
+ <div id="comboLine" class="combo-line"></div>
+ <div class="field" style="margin-top:12px"><label>开发方向 · 剩余可分配 <span id="dirLeft"></span> 点</label>
+  <div id="dirBox" class="dir"></div>
+  <div class="presets" id="dirPresets"></div>
+  <div id="dirWeights" class="weights"></div>
+ </div>
+ <div id="projectPreview" class="hint"></div>
+ <div class="field"><label>项目团队（2—3 人）</label><div id="projectPicks" class="picks"></div></div>
+</div>
+<div class="dfoot"><button onclick="closeProjectDialog()">再想想</button><button class="primary" onclick="startProject()">确认立项</button></div></dialog>
+
+<!-- 评测杂志 -->
+<dialog id="reviewDialog" class="wide"><div class="dhead"><h2>本周评测 · 像素周刊</h2></div><div id="reviewBody" class="dbody"></div><div class="dfoot"><button class="primary" onclick="closeReview()">收下评价，等待销量</button></div></dialog>
+
+<div id="toast" class="toast"></div>
+<script>
+/* =====================================================================
+   开个游戏公司 V2.0
+   结构：数据表 → 核心状态/存档/时间 → 每周模拟 → 玩家操作 → 界面渲染
+   ===================================================================== */
+'use strict';
+const VERSION='2.0',GAME_TITLE='开个游戏公司',DEFAULT_COMPANY='新星游戏';
+const SAVE_KEY='gameCompany_v2',LEGACY_KEY='pixelWorkshop_v1',META_KEY='gameCompany_meta_v1';
+const WEEK_MS=5000,START_YEAR=2028,EVAL_YEAR=2038;
+
+/* ---------- 类型 / 题材 / 组合 ---------- */
+const GENRES=['RPG','动作','模拟','策略','冒险','射击','益智','经营'];
+const THEMES=['幻想','侦探','太空','城市','机器人','料理','学校','战争'];
+const DIMS=['code','art','music','idea'];
+const DIM_LABEL={code:'程序',art:'画面',music:'音乐',idea:'创意'};
+const DIM_COLOR={code:'#4c89e9',art:'#ed7b8a',music:'#e0a23e',idea:'#52af9f'};
+/* 各类型对四维的看重程度（评分权重，和为 1） */
+const GENRE_W={
+  RPG:{idea:.35,music:.25,art:.2,code:.2},
+  动作:{code:.35,art:.3,idea:.2,music:.15},
+  模拟:{idea:.35,code:.3,art:.2,music:.15},
+  策略:{idea:.4,code:.3,art:.15,music:.15},
+  冒险:{idea:.35,art:.25,music:.25,code:.15},
+  射击:{code:.4,art:.3,music:.15,idea:.15},
+  益智:{idea:.4,code:.25,music:.2,art:.15},
+  经营:{idea:.35,code:.35,art:.15,music:.15}
+};
+/* 组合契合表：S 神组合 / A 契合 / C 不搭 / 其余 B 平淡。立项时对玩家隐藏，发行后揭晓。 */
+const COMBO_S=['RPG|幻想','RPG|学校','动作|机器人','动作|战争','模拟|城市','模拟|料理','策略|战争','策略|太空','冒险|侦探','冒险|学校','射击|太空','射击|机器人','益智|料理','益智|学校','经营|城市','经营|料理'];
+const COMBO_A=['RPG|侦探','RPG|太空','RPG|战争','动作|幻想','动作|太空','动作|侦探','模拟|学校','模拟|机器人','策略|幻想','策略|机器人','策略|城市','冒险|幻想','冒险|太空','冒险|城市','射击|战争','射击|城市','益智|机器人','益智|幻想','经营|学校','经营|太空'];
+const COMBO_C=['RPG|料理','动作|料理','动作|学校','策略|料理','策略|学校','射击|料理','射击|学校','射击|幻想','益智|战争','益智|太空','经营|战争','经营|机器人','模拟|战争'];
+const COMBO_DEF={S:{label:'神组合',stars:'★★★',mult:1.16,cls:'s'},A:{label:'契合',stars:'★★',mult:1.08,cls:'a'},B:{label:'平淡',stars:'★',mult:1,cls:'b'},C:{label:'不搭',stars:'✕',mult:.9,cls:'c'}};
+const MASTERY_XP=[2,5,9,14];
+const STAT_CAP=99;
+/* 市场期待：随年份上涨的品质基准，评分按品质与基准之比计算 */
+const marketExpectation=()=>27*Math.min(3.6,1+.18*Math.max(0,S.year-START_YEAR));
+
+/* ---------- 开发方向 ---------- */
+const DIR_POINTS=8,DIR_MAX=5;
+const DIR_PRESETS=[['均衡',{code:2,art:2,music:2,idea:2}],['剧情向',{code:1,art:1,music:3,idea:3}],['硬核系统',{code:4,art:1,music:0,idea:3}],['视听盛宴',{code:1,art:4,music:3,idea:0}],['玩法实验',{code:2,art:1,music:0,idea:5}]];
+const dirMult=pts=>.85+.075*(pts||0);
+
+/* ---------- 评论家 ---------- */
+const CRITICS=[
+  {id:'zhou',name:'像素周刊 · 老周',ico:'📰',focus:['code'],bias:-.25,desc:'看完成度，对 Bug 零容忍'},
+  {id:'can',name:'玩家之声 · 阿灿',ico:'🎮',focus:['idea'],bias:.35,desc:'跟着市场热度走，最在乎好不好玩'},
+  {id:'mo',name:'艺术评论 · 林墨',ico:'🎨',focus:['art','music'],bias:0,desc:'视听表现决定一切'},
+  {id:'k',name:'独立视角 · K',ico:'🕶️',focus:['idea'],bias:-.1,desc:'欣赏新尝试，厌倦炒冷饭'}
+];
+const HOF_THRESHOLD=32;
+
+/* ---------- 规模 ---------- */
+const SIZES={
+  small:{base:60000,need:1,progress:34,quality:.92,demand:.86,price:49,label:'小型 · 约 12 周 · 灵活试水',target:60},
+  normal:{base:170000,need:1,progress:25,quality:1,demand:1.08,price:98,label:'普通 · 约 16 周 · 均衡制作',target:85},
+  large:{base:480000,need:2,progress:20,quality:1.08,demand:1.25,price:168,label:'大型 · 约 20 周 · 高投入高上限',target:120}
+};
+const PHASES=['企划','程序开发','美术制作','音乐制作'];
+const PHASE_KEY={企划:'idea',程序开发:'code',美术制作:'art',音乐制作:'music'};
+
+/* ---------- 平台 ---------- */
+const BASE_PLATFORMS=[
+  {n:'Pocket-1',users:52,fee:18000,share:.28,genre:'RPG',launch:2026,tech:1},
+  {n:'PC',users:39,fee:0,share:.22,genre:'策略',launch:2020,tech:1},
+  {n:'NovaBox',users:74,fee:70000,share:.30,genre:'动作',launch:2028,tech:2},
+  {n:'Aurora',users:28,fee:40000,share:.26,genre:'冒险',launch:2030,tech:2},
+  {n:'CloudPlay',users:18,fee:25000,share:.32,genre:'模拟',launch:2033,tech:3},
+  {n:'Orbit掌机',users:11,fee:55000,share:.24,genre:'RPG',launch:2036,tech:3},
+  {n:'NeonNet',users:8,fee:90000,share:.27,genre:'射击',launch:2039,tech:4}
+];
+const PLATFORM_NAMES=['LumaGo','Vertex X','云帆','曜石掌机','Prism Hub','星环','轻舟','HyperArc'];
+const AUDIENCES=['核心玩家','休闲玩家','年轻玩家','剧情玩家','策略玩家'];
+const AUDIENCE_MAP={RPG:['剧情玩家','核心玩家'],冒险:['剧情玩家','年轻玩家'],策略:['策略玩家','核心玩家'],模拟:['休闲玩家','年轻玩家'],经营:['休闲玩家','策略玩家'],射击:['年轻玩家','核心玩家'],动作:['年轻玩家','核心玩家'],益智:['休闲玩家','年轻玩家']};
+
+/* ---------- 公司 ---------- */
+const OFFICES=[
+  {name:'小型出租办公室',cap:4,rent:24000,need:1,cost:0},
+  {name:'明亮办公间',cap:7,rent:60000,need:2,cost:680000},
+  {name:'创意办公层',cap:11,rent:135000,need:3,cost:2500000},
+  {name:'星港总部',cap:18,rent:300000,need:4,cost:7900000}
+];
+const ROLES={programmer:['程序','🧑‍💻','code'],artist:['美术','🎨','art'],planner:['策划','🗺️','idea'],musician:['音乐','🎹','music'],producer:['制作人','🎬','idea']};
+const ROLE_COLOR={programmer:'#4c89e9',artist:'#ed7b8a',planner:'#52af9f',musician:'#d18a4c',producer:'#8c72d8'};
+const FACILITIES={computer:['高性能电脑','code','程序效率 +6%/级',85000],tablet:['专业画板','art','美术效率 +6%/级',85000],musicdesk:['音乐工作站','music','音乐效率 +6%/级',85000],whiteboard:['创意白板','idea','企划效率 +6%/级',72000],coffee:['咖啡机','energy','空闲恢复 +4/级',50000],sofa:['休息沙发','rest','休息恢复 +8/级',65000]};
+const INVESTMENTS={
+  engine:{name:'自研引擎',max:5,base:260000,step:170000,desc:'每级提高项目品质产出 4%，并改善技术奖竞争力。'},
+  qa:{name:'质量保障中心',max:5,base:190000,step:125000,desc:'阶段切换和发行前减少 Bug，降低赶工风险。'},
+  community:{name:'玩家社区',max:5,base:220000,step:145000,desc:'每级提高销售触达 4%，增强玩家选择奖竞争力。'},
+  intelligence:{name:'市场情报部',max:4,base:180000,step:140000,desc:'削弱同类型竞品分流，并展示竞争公司的真实水平。'}
+};
+const RESEARCH_UP=[['pipeline','制作管线','每级让团队品质产出 +4%'],['market','市场研究','每级让销售触达 +4%'],['academy','人才学院','每级提高培训成长']];
+const JOBS=[
+  {id:'art',name:'小型美术外包',weeks:2,min:1,max:2,minPay:40000,maxPay:60000,drain:[5,6],need:'art',risk:0},
+  {id:'custom',name:'商业定制项目',weeks:3,min:2,max:3,minPay:90000,maxPay:130000,drain:[5,7],need:'idea',risk:.18},
+  {id:'urgent',name:'紧急救火外包',weeks:2,min:3,max:3,minPay:110000,maxPay:150000,drain:[7,8],need:'code',risk:.28}
+];
+const RIVALS=[['雷火互动','动作与射击',1.12,['动作','射击']],['青鸟叙事','RPG与冒险',1.04,['RPG','冒险']],['方格实验室','创意小品',.88,['益智','模拟']],['北极星娱乐','大型作品',1.25,['大型','RPG']],['欢乐彩虹','休闲与年轻玩家',.96,['模拟','经营']],['黑石科技','技术冒险',1.02,['策略','冒险']]];
+const GOALS=[['release','发行三款作品',3],['score','打造一款 8 分作品',8],['profit','实现年度净利润',1],['grow','培养三名 Lv.2 员工',3],['rank','进入年度收入榜前三',1],['platform','在新平台发行作品',1],['hof','一款作品进入名人堂',1]];
+const PERKS=[
+  ['fund','融资高手',2,'初始资金 +¥400,000'],
+  ['network','行业人脉',4,'一名 Lv.2 资深伙伴加入创始团队'],
+  ['brand','老牌口碑',6,'初始名气 +3、粉丝 +600'],
+  ['tech','技术底蕴',9,'自研引擎与质量保障各 Lv.1'],
+  ['codex','行业百科',5,'开局揭晓 6 个组合契合度']
+];
+
+/* ---------- 员工档案 ---------- */
+const PROFILES=[
+ ['林晨','programmer','代码洁癖','策略 / 机器人','参与一款 8 分以上作品'],['周可','artist','视觉狂热','幻想 / 城市','获得最佳美术评价'],['沈遥','planner','安静观察者','侦探 / 学校','做出一款被记住的作品'],
+ ['顾澜','producer','稳健统筹','经营 / 城市','带领团队升到 Lv.3'],['程野','programmer','速度派','动作 / 机器人','主导一次技术突破'],['叶澄','artist','色彩控','幻想 / 料理','完成一款 7 分作品'],
+ ['孟希','musician','节奏大师','竞速 / 太空','获得一次最佳音乐评价'],['许墨','planner','市场嗅觉','经营 / 城市','让粉丝突破一万'],['唐果','artist','细节控','学校 / 侦探','做出自己的代表作'],
+ ['白屿','programmer','架构思维','策略 / 太空','升至 Lv.6'],['苏晚','musician','情绪捕手','恋爱 / 幻想','参与年度获奖作品'],['郭岩','producer','高压领队','战争 / 动作','完成三款旗舰项目'],
+ ['陆宁','planner','怪点子','益智 / 机器人','触发一次灵感爆发'],['夏岚','artist','场景诗人','城市 / 历史','打造一处名场景'],['陈放','programmer','夜猫子','射击 / 太空','解决一次重大 Bug'],
+ ['乔伊','musician','复古迷','益智 / 幻想','制作一首招牌配乐'],['高桥','producer','新人教练','学校 / 经营','培养两名 Lv.4 员工'],['方圆','planner','叙事强迫症','冒险 / 侦探','写出最佳结局'],
+ ['李芮','artist','角色控','恋爱 / 幻想','完成角色美术专精'],['吴言','programmer','工具达人','模拟 / 城市','让公司运转更高效'],['姚音','musician','声音收藏家','恐怖 / 太空','建成专业录音棚'],
+ ['韩一','producer','低调王牌','策略 / 战争','夺得年度游戏'],['罗朵','artist','灵感旅行者','料理 / 城市','去一次创作旅行'],['魏哲','planner','逻辑控','策略 / 机器人','设计一套成熟玩法']
+];
+const TRAIT_TEXT={
+  代码洁癖:'程序效率 +10%，并略微降低 Bug 风险',视觉狂热:'美术效率 +12%',安静观察者:'企划效率 +10%',稳健统筹:'全队各阶段效率 +4%',
+  速度派:'程序效率 +10%，赶工时额外推进且少消耗体力',色彩控:'美术效率 +10%，统一风格收益更高',节奏大师:'音乐效率 +12%',市场嗅觉:'企划效率 +7%，趋势收益更稳定',
+  细节控:'美术效率 +7%，降低视觉阶段 Bug 风险',架构思维:'程序效率 +11%，重构收益提高',情绪捕手:'音乐效率 +10%，低体力时减轻效率损失',高压领队:'全阶段效率 +5%，赶工体力损耗降低',
+  怪点子:'企划效率 +13%，但偶尔带来额外 Bug',场景诗人:'城市题材美术效率 +14%',夜猫子:'低体力时程序效率仍有加成',复古迷:'掌机平台音乐效率 +14%',
+  新人教练:'全队经验成长加快',叙事强迫症:'RPG / 冒险企划效率 +14%',角色控:'RPG 美术效率 +13%',工具达人:'程序效率随设施等级提高',
+  声音收藏家:'音乐效率 +11%',低调王牌:'高默契团队全阶段效率 +9%',灵感旅行者:'美术效率 +9%',逻辑控:'企划效率 +9%，降低 Bug 风险',踏实新人:'无额外效果'
+};
+const NAME_POOL=['林晨','周可','沈遥','程野','叶澄','孟希','许墨','唐果','白屿','苏晚','郭岩','陆宁','秦朗','江雪','何思','宋一','钟灵','马跃'];
+
+/* ---------- 阶段抉择 ---------- */
+const DECISIONS={
+  1:[['稳定优先','Bug -3，进度小幅放缓','stable'],['快速赶工','进度 +20，Bug +5，体力额外消耗','rush'],['重构底层','程序 +8，成本 +¥2万','refactor'],['先做可玩原型','程序 +8，成本 +¥2万','refactor'],['抢先验证节奏','进度 +20，Bug +5','rush'],['建立测试规范','Bug -3，进度略慢','stable']],
+  2:[['统一风格','画面 +7，Bug -1','style'],['强化特效','画面 +11，Bug +3','effects'],['控制成本','成本 -¥1.5万，画面 +2','budget'],['围绕题材定调','画面 +7，Bug -1','style'],['突出招牌场面','画面 +11，Bug +3','effects'],['复用成熟素材','回收 ¥1.5万，画面 +2','budget']],
+  3:[['修复严重问题','Bug -5，进度 +5','fix'],['继续增加内容','创意 +6，Bug +2','content'],['按期发行','进度 +15，保持风险','ship'],['邀请核心玩家测试','Bug -5，进度 +5','fix'],['追加类型特色内容','创意 +6，Bug +2','content'],['锁定版本范围','进度 +15','ship']]
+};
+
+/* ---------- 行业事件 ---------- */
+const EVENT_KINDS=['expo','training','engine','streamer','leak','outage','platformFund','audit','festival','awardCampaign','renovation','grant','interview','producer','trip'];
+/* =====================================================================
+   核心：工具、状态、存档、时间、对话框
+   ===================================================================== */
+let S=null,speed=1,preferredSpeed=1,clockHandle=null,modalSpeed=null,activePage='home',candidates=[],activeStaff=null;
+const FX=[];/* 场景飘字（不存档） */
+
+const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const pick=a=>a[rnd(0,a.length-1)];
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+const money=n=>'¥'+Math.round(Number.isFinite(n)?n:0).toLocaleString('zh-CN');
+const fmtW=n=>n>=10000?(n/10000).toFixed(n>=1000000?0:1)+'万':String(Math.round(n));
+const dateStr=()=>`${S.year}.${S.month} · 第 ${S.week} 周`;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const byId=id=>document.getElementById(id);
+const staffById=id=>S.staff.find(e=>e.id===id);
+const projectById=id=>S.projects.find(p=>p.id===id);
+const gameById=id=>S.games.find(g=>g.id===id);
+const comboKey=(g,t)=>`${g}|${t}`;
+function comboTier(g,t){let k=comboKey(g,t);return COMBO_S.includes(k)?'S':COMBO_A.includes(k)?'A':COMBO_C.includes(k)?'C':'B'}
+function comboKnown(g,t){return !!S.combos[comboKey(g,t)]}
+function masteryLevel(kind,name){let xp=S.mastery[kind][name]||0,l=0;MASTERY_XP.forEach(t=>{if(xp>=t)l++});return l}
+function toast(msg){let t=byId('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
+function addNews(type,text,ref=''){S.news.unshift({year:S.year,month:S.month,week:S.week,type,text,ref});S.news=S.news.slice(0,40)}
+function devLog(p,text){p.log=p.log||[];p.log.unshift(`${S.year}.${S.month} W${S.week} · ${text}`);p.log=p.log.slice(0,10)}
+function officeDef(){return OFFICES[S.office]}
+function capacity(){return S.level>=5?3:S.level>=3?2:1}
+function primaryProject(){return S.projects[0]||null}
+function pairKey(a,b){return[a,b].sort((x,y)=>x-y).join('_')}
+function trendLabel(c){return c==='genre'?'玩法':c==='theme'?'题材':'平台'}
+
+/* ---------- 员工 ---------- */
+function makeStaff(name,role,lvl=1){
+  let q={code:rnd(24,40),art:rnd(18,36),music:rnd(15,33),idea:rnd(22,40)};q[ROLES[role][2]]+=20;if(role==='producer')DIMS.forEach(k=>q[k]+=7);
+  if(lvl>1)DIMS.forEach(k=>q[k]+=(lvl-1)*6);
+  return{id:Math.floor(Date.now()%1e9+Math.random()*1e6),name,role,lvl,salary:rnd(11000,15500)*lvl,energy:100,xp:0,stats:q,status:null,creativity:0,trait:'踏实新人',traitText:TRAIT_TEXT.踏实新人,preference:'自由探索',goal:'完成第一款作品',goalDone:false,color:ROLE_COLOR[role],works:[],proud:null,specialty:null,mood:'专注'};
+}
+function staffFromProfile(p,lvl=1){let e=makeStaff(p[0],p[1],lvl);e.trait=p[2];e.traitText=TRAIT_TEXT[p[2]]||'';e.preference=p[3];e.goal=p[4];return e}
+function uniqueName(){let used=new Set(S.staff.map(x=>x.name)),pool=NAME_POOL.filter(n=>!used.has(n));if(pool.length)return pick(pool);let n=pick(NAME_POOL),i=2;while(used.has(n+i))i++;return n+i}
+function effect(e){return e.energy>=60?1:e.energy>=35?.9:e.energy>=15?.75:.55}
+function creativityFactor(e){return clamp(1+(e.creativity||0)/100,.72,1.08)}
+function preferenceBonus(e,p){let t=`${e.preference||''}`;return(t.includes(p.genre)||t.includes(p.theme))?.08:0}
+function traitBonus(e,key,p){
+  let t=e.trait,b=0;
+  if(t==='代码洁癖'&&key==='code')b=.10;if(t==='视觉狂热'&&key==='art')b=.12;if(t==='安静观察者'&&key==='idea')b=.10;if(t==='稳健统筹')b=.04;
+  if(t==='速度派'&&key==='code')b=.10;if(t==='色彩控'&&key==='art')b=.10;if(t==='节奏大师'&&key==='music')b=.12;if(t==='市场嗅觉'&&key==='idea')b=.07;
+  if(t==='细节控'&&key==='art')b=.07;if(t==='架构思维'&&key==='code')b=.11;if(t==='情绪捕手'&&key==='music')b=.10;if(t==='高压领队')b=.05;
+  if(t==='怪点子'&&key==='idea')b=.13;if(t==='场景诗人'&&key==='art')b=p?.theme==='城市'?.14:.05;if(t==='夜猫子'&&key==='code')b=e.energy<60?.13:.04;
+  if(t==='复古迷'&&key==='music')b=/Pocket|掌机/.test(p?.platform||'')?.14:.05;if(t==='新人教练')b=.03;if(t==='叙事强迫症'&&key==='idea')b=/RPG|冒险/.test(p?.genre||'')?.14:.05;
+  if(t==='角色控'&&key==='art')b=p?.genre==='RPG'?.13:.05;if(t==='工具达人'&&key==='code')b=.07+Object.values(S.facilities).reduce((a,x)=>a+x,0)*.01;if(t==='声音收藏家'&&key==='music')b=.11;
+  if(t==='低调王牌')b=(p?.synergy||50)>=70?.09:.03;if(t==='灵感旅行者'&&key==='art')b=.09;if(t==='逻辑控'&&key==='idea')b=.09;return b;
+}
+function facilityBonus(key){let map={code:'computer',art:'tablet',music:'musicdesk',idea:'whiteboard'};return map[key]?S.facilities[map[key]]*.06:0}
+function researchBonus(key){let r=S.researchUpgrades;return key==='quality'?(r.pipeline||0)*.04:key==='sales'?(r.market||0)*.04:key==='training'?(r.academy||0)*.15:0}
+function teamSynergy(ids){
+  if(!ids?.length)return 50;let pairs=[];for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)pairs.push(S.bonds[pairKey(ids[i],ids[j])]||50);
+  let v=pairs.length?pairs.reduce((a,b)=>a+b,0)/pairs.length:50,m=ids.map(staffById).filter(Boolean);
+  if(m.some(e=>e.trait==='代码洁癖')&&m.some(e=>e.trait==='速度派'))v-=7;if(m.some(e=>e.role==='producer'))v+=5;return clamp(Math.round(v),10,95);
+}
+
+/* ---------- 平台 ---------- */
+function ensurePlatforms(){
+  if(!S.platforms||!S.platforms.length)S.platforms=BASE_PLATFORMS.map(p=>({...p}));
+  let max=Math.max(...S.platforms.map(p=>p.launch)),target=S.year+10,index=S.platforms.length-BASE_PLATFORMS.length;
+  while(max<target){max+=4;let base=PLATFORM_NAMES[index%PLATFORM_NAMES.length],n=base+(index>=PLATFORM_NAMES.length?Math.floor(index/PLATFORM_NAMES.length)+1:'');
+    if(!S.platforms.some(p=>p.n===n))S.platforms.push({n,users:32+rnd(0,28),fee:35000+rnd(0,45000),share:.23+(index%4)*.02,genre:GENRES[index%GENRES.length],launch:max,tech:2+Math.floor((max-START_YEAR)/8)});index++}
+}
+function platform(name){
+  ensurePlatforms();let p=S.platforms.find(x=>x.n===name)||S.platforms[0];if(p.n==='PC')return{...p,stage:'常青平台',users:45,available:true};
+  let age=S.year-p.launch,stage,factor,available=true;
+  if(age<0){stage=`${-age} 年后发布`;factor=.2;available=false}else if(age<2){stage='发布预热';factor=.82}else if(age<5){stage='快速增长';factor=1.18}else if(age<9){stage='市场成熟';factor=1}else if(age<12){stage='竞争激烈';factor=.82}else if(age<15){stage='用户衰退';factor=.55}else{stage='停止支持';factor=.15;available=false}
+  return{...p,stage,users:Math.max(2,Math.round(p.users*factor)),available};
+}
+function platformMetrics(genre,name,team=[]){let pl=platform(name),avgCode=team.length?team.reduce((a,e)=>a+e.stats.code,0)/team.length:30,preference=genre===pl.genre?1.1:.98,userFactor=clamp(pl.users/40,.65,1.5),readiness=clamp(avgCode/(18+pl.tech*8),.76,1.18);return{pl,preference,userFactor,readiness}}
+function newTrend(){ensurePlatforms();let category=pick(['genre','theme','platform']),pool=category==='genre'?GENRES:category==='theme'?THEMES:S.platforms.filter(x=>platform(x.n).available).map(x=>x.n);if(!pool.length){category='genre';pool=GENRES}return{category,name:pick(pool),stage:'升温期',weeks:8}}
+function trendFactor(p){let t=S.trend,match=(t.category==='genre'&&t.name===p.genre)||(t.category==='theme'&&t.name===p.theme)||(t.category==='platform'&&t.name===p.platform);if(!match)return 1;return t.stage==='热门期'?1.22:t.stage==='升温期'?1.1:1.04}
+function audienceStrength(genre){return(AUDIENCE_MAP[genre]||['核心玩家']).reduce((a,k)=>a+(S.audiences[k]||0),0)}
+function fanBoost(){return 1+Math.min(.25,Math.log10((S.fans||0)+10)*.065)}
+function marketingBoost(a){return 1+Math.min(.34,Math.sqrt(Math.max(0,a)/110000)*.22)}
+
+/* ---------- 状态 ---------- */
+function fresh(){
+  return{version:VERSION,company:DEFAULT_COMPANY,year:START_YEAR,month:1,week:1,money:1180000,fame:4,fans:90,rp:8,level:1,office:0,
+    staff:[],projects:[],games:[],sales:[],news:[],trend:null,loans:[],crisis:{negativeWeeks:0,seen:false},event:null,poach:null,
+    unlocked:{genres:GENRES.slice(0,6),themes:THEMES.slice(0,6)},facilities:{computer:0,tablet:0,musicdesk:0,whiteboard:0,coffee:0,sofa:0},bonds:{},
+    ips:[],audiences:Object.fromEntries(AUDIENCES.map(x=>[x,0])),rivals:RIVALS.map((x,i)=>({id:i,name:x[0],style:x[1],power:x[2],specialties:x[3],income:Math.round(400000*x[2]),games:[],awards:0,quality:6.15+x[2]*1.15,tech:1+Math.floor(i/2),cash:Math.round(700000*x[2]),profit:0,momentum:0,seasonHistory:{}})),
+    yearRecords:{},brand:'尚在形成',annualGoal:null,annualGoalYear:null,annualGoalKnownPlatforms:[],postOps:[],outsource:null,outsourceCooldown:0,
+    researchUpgrades:{pipeline:0,market:0,academy:0},investments:{engine:0,qa:0,community:0,intelligence:0},corporate:{bonusCooldown:0,campaignCooldown:0,eventCooldown:0,poachCooldown:0,nextLaunchBoost:0,awardBoost:0,contractPenalty:0},
+    awardHistory:[],eventHistory:[],evaluationSeen:false,pendingEvaluation:false,finYears:{},platforms:null,
+    combos:{},mastery:{genre:{},theme:{}},hallOfFame:[],startingProfile:'',decisionProjectId:null,alert:null};
+}
+/* 补齐字段：新建、旧版存档（V1.7–1.9）与损坏存档都走这里 */
+function normalize(raw){
+  let f=fresh(),s={...f,...raw};
+  for(let k of ['crisis','unlocked','facilities','bonds','audiences','researchUpgrades','investments','corporate','mastery','yearRecords','finYears','combos'])s[k]={...f[k],...(raw[k]&&typeof raw[k]==='object'?raw[k]:{})};
+  s.mastery.genre=s.mastery.genre||{};s.mastery.theme=s.mastery.theme||{};
+  for(let k of ['staff','projects','games','sales','news','loans','ips','postOps','awardHistory','eventHistory','hallOfFame'])if(!Array.isArray(s[k]))s[k]=[];
+  if(!Array.isArray(s.rivals)||!s.rivals.length)s.rivals=f.rivals;
+  s.rivals.forEach((r,i)=>{let d=RIVALS[i%RIVALS.length];r.specialties=r.specialties||d[3];r.quality=r.quality||6.15+(r.power||1)*1.15;r.tech=r.tech||1+Math.floor(i/2);r.cash=r.cash||600000;r.profit=r.profit||0;r.momentum=r.momentum||0;r.seasonHistory=r.seasonHistory||{};r.games=r.games||[];r.awards=r.awards||0});
+  if(!Number.isFinite(s.money))s.money=0;['fame','fans','rp','level','office','year','month','week'].forEach(k=>{if(!Number.isFinite(s[k]))s[k]=f[k]});
+  s.staff=s.staff.map(e=>{let b=makeStaff(e.name||'未命名',ROLES[e.role]?e.role:'planner',e.lvl||1),x={...b,...e};x.stats={...b.stats,...(e.stats||{})};x.energy=clamp(Number.isFinite(e.energy)?e.energy:100,0,100);x.creativity=clamp(e.creativity||0,-30,8);x.works=Array.isArray(e.works)?e.works:[];x.traitText=TRAIT_TEXT[x.trait]||x.traitText||'';x.color=x.color||ROLE_COLOR[x.role];return x});
+  s.projects=s.projects.map(p=>({...p,phases:p.phases||PHASES,phase:p.phase||0,quality:{code:0,art:0,music:0,idea:0,...(p.quality||{})},direction:p.direction||{code:2,art:2,music:2,idea:2},log:Array.isArray(p.log)?p.log:[],decisions:p.decisions||[],team:p.team||[],bugs:p.bugs||0,progress:p.progress||0,synergy:p.synergy||50,finance:{base:0,platform:0,marketing:0,wages:0,debug:0,events:0,total:0,...(p.finance||{})},publisher:p.publisher||'独立发行',pendingDecision:p.pendingDecision??null,pendingChoices:p.pendingChoices||null}));
+  s.games.forEach(g=>{g.quality=g.quality||{code:0,art:0,music:0,idea:0};g.salesHistory=Array.isArray(g.salesHistory)?g.salesHistory:[];g.finance=g.finance||{total:0};g.units=g.units||0;g.netRevenue=g.netRevenue||0;g.gross=g.gross||0;g.profit=Number.isFinite(g.profit)?g.profit:g.netRevenue-g.finance.total;
+    if(!g.reviews){let base=Math.round(g.score||6);g.reviews=CRITICS.map(c=>({id:c.id,score:clamp(base+rnd(-1,1),1,10),quote:'（旧版作品，评测记录已按总分补录。）'}));g.total=g.reviews.reduce((a,r)=>a+r.score,0)}
+    if(g.genre&&g.theme&&!s.combos[comboKey(g.genre,g.theme)])s.combos[comboKey(g.genre,g.theme)]={tried:1,best:g.score||0,tier:comboTier(g.genre,g.theme)}});
+  s.ips.forEach(ip=>{ip.freshness=Number.isFinite(ip.freshness)?ip.freshness:100;ip.rebootPlanned=!!ip.rebootPlanned;ip.entries=ip.entries||0;ip.recognition=ip.recognition||0;ip.expectation=ip.expectation||0;ip.goodwill=ip.goodwill||0;ip.bestScore=ip.bestScore||0;ip.totalUnits=ip.totalUnits||0});
+  if(!s.trend||!s.trend.category){S=s;s.trend=newTrend()}
+  s.version=VERSION;return s;
+}
+function save(){if(!S)return;try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(e){toast('存档写入失败：浏览器存储空间不足。')}}
+function rawLoad(){try{let v=JSON.parse(localStorage.getItem(SAVE_KEY));if(v)return v;let old=JSON.parse(localStorage.getItem(LEGACY_KEY));if(old&&old.year)return{...old,_legacy:true};return null}catch{return null}}
+function readMeta(){try{return JSON.parse(localStorage.getItem(META_KEY))||{}}catch{return{}}}
+function writeMeta(m){try{localStorage.setItem(META_KEY,JSON.stringify(m))}catch{}}
+
+/* ---------- 时间 ---------- */
+function hasOpenModal(){return[...document.querySelectorAll('dialog')].some(x=>x.open)}
+function scheduleClock(){
+  clearTimeout(clockHandle);clockHandle=null;
+  if(!S||speed<=0||document.hidden||hasOpenModal())return;
+  clockHandle=setTimeout(()=>{clockHandle=null;if(S&&speed>0&&!document.hidden&&!hasOpenModal())advanceWeek();scheduleClock()},Math.max(900,WEEK_MS/speed));
+}
+function updateSpeedUI(){document.querySelectorAll('[data-s]').forEach(x=>x.classList.toggle('active',+x.dataset.s===speed));let box=document.querySelector('.speed');if(box)box.dataset.state=speed===0?'已暂停':`${speed}× 运行中`}
+function setSpeed(n){let t=Number(n)||0;if(t>0)preferredSpeed=t;if(modalSpeed!==null&&t>0){modalSpeed=t;updateSpeedUI();return}speed=t;updateSpeedUI();scheduleClock()}
+function pauseForModal(){if(modalSpeed===null){modalSpeed=speed>0?speed:preferredSpeed;speed=0;updateSpeedUI();scheduleClock()}}
+function resumeAfterModal(){if(hasOpenModal()||S?.alert)return;if(modalSpeed!==null){let s=modalSpeed;modalSpeed=null;speed=s;updateSpeedUI()}scheduleClock()}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(clockHandle);clockHandle=null}else scheduleClock()});
+
+/* ---------- 通用对话框 ---------- */
+let dlgCancel=null;
+function openDlg(title,body,foot='',opt={}){
+  let d=byId('dlg');byId('dlgTitle').textContent=title;byId('dlgBody').innerHTML=body;byId('dlgFoot').innerHTML=foot||'<button onclick="closeDlg()">关闭</button>';
+  byId('dlgClose').classList.toggle('hidden',!!opt.noClose);dlgCancel=opt.onCancel||null;d.classList.toggle('wide',!!opt.wide);
+  pauseForModal();if(!d.open)d.showModal();byId('dlgBody').scrollTop=0;
+}
+function closeDlg(){let d=byId('dlg');if(d.open)d.close();dlgCancel=null;resumeAfterModal();if(S)render()}
+function openHelp(){openDlg('经营说明',`<p>1× 速度下每 5 秒推进一周，暂停时不会产生进度、收入或恢复；打开面板会自动暂停，关闭后回到原速度。</p><p><b>立项</b>：选类型、题材、平台，并把 ${DIR_POINTS} 点开发方向分配到程序 / 画面 / 音乐 / 创意。每种类型看重的维度不同，分配对了，评论家会给出更高分。</p><p><b>开发</b>：项目卡上四项品质实时增长，办公室里会飘出员工每周的贡献。阶段切换时会有三选一的方向抉择；开发完成后进入调试，可修 Bug、打磨或直接发行。</p><p><b>评测</b>：发行后四位评论家各打 1—10 分，总分满 40。总分达到 ${HOF_THRESHOLD} 分的作品进入名人堂。类型 × 题材的契合度在立项时是未知的，发行后才会揭晓并记入图鉴；同一类型做得越多，熟练度越高。</p><p><b>经营</b>：工资每周结算，房租和运营费每月结算。外包能救急但会消耗创作状态；名气每年衰减 5%；粉丝提高销量触达。平台会更迭，竞争公司会真实发行作品、争夺年度金像素奖，也会来挖角。</p><p>2038 年董事会做十年评估，可继续经营，或带着传承经验重新创业。</p>`,'<button class="primary" onclick="closeDlg()">明白了</button>')}
+document.addEventListener('keydown',ev=>{if(ev.key!=='Escape')return;let d=[...document.querySelectorAll('dialog[open]')].pop();if(!d)return;ev.preventDefault();ev.stopPropagation();safeClose(d)},true);
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('dialog').forEach(d=>d.addEventListener('cancel',ev=>{ev.preventDefault();safeClose(d)}))});
+function safeClose(d){
+  if(d.id==='projectDialog')return closeProjectDialog();
+  if(d.id==='reviewDialog')return closeReview();
+  if(d.id==='dlg'){if(dlgCancel){let f=dlgCancel;dlgCancel=null;return f()}if(byId('dlgClose').classList.contains('hidden'))return;return closeDlg()}
+}
+/* =====================================================================
+   每周模拟
+   ===================================================================== */
+function advanceWeek(){
+  if(!S||hasOpenModal()||speed===0)return;
+  let y=S.year,m0=S.money;
+  S.week++;if(S.week>4){S.week=1;S.month++;if(S.month>12){S.month=1;S.year++;annualClose()}}
+  if(hasOpenModal()){save();render();return}
+  weeklyPayroll();processStaff();processProjects();processOutsource();processSales();processPostOps();processLoans();progressTrend();financialRisk();
+  if(!hasOpenModal())maybeEvent();if(!hasOpenModal())maybePoach();
+  finYear(y).net+=S.money-m0;
+  if(!Number.isFinite(S.money)){S.money=0;addNews('系统修复','资金数据出现异常，已重置为 0。')}
+  save();render();
+}
+function finYear(y){let k=String(y);S.finYears[k]=S.finYears[k]||{income:0,net:0};return S.finYears[k]}
+
+/* ---------- 财务 ---------- */
+function weeklyPayroll(){
+  let total=0;S.staff.forEach(e=>{let w=e.salary/4;total+=w;S.projects.filter(p=>p.team.includes(e.id)&&!p.paused).forEach(p=>{p.finance.wages+=w;p.finance.total+=w})});S.money-=total;
+  if(S.week!==1)return;
+  let age=Math.max(0,S.year-START_YEAR),overhead=Math.round((3000+S.staff.length*900+S.projects.length*1500+S.level*2000)*(1+age*.03));
+  S.money-=officeDef().rent+overhead;
+  let lic=0,names=[];
+  S.ips.forEach(ip=>{if(ip.freshness<100)ip.freshness=Math.min(100,ip.freshness+2);else if(ip.freshness>100)ip.freshness=Math.max(100,ip.freshness-1);
+    if(ip.recognition>=100&&ip.entries>=2){let v=Math.min(45000,4000+Math.round(ip.recognition*40));lic+=v;names.push(ip.name)}});
+  if(lic){S.money+=lic;finYear(S.year).income+=lic}
+  addNews('月度财务',`房租 ${money(officeDef().rent)}、运营支出 ${money(overhead)} 已扣除。${lic?`IP 授权收入 ${money(lic)}（${names.join('、')}）。`:''}`);
+}
+function processLoans(){S.loans.forEach(x=>x.weeks--);S.loans.filter(x=>x.weeks<=0).forEach(x=>{S.money-=x.repay;addNews('贷款到期',`偿还短期贷款 ${money(x.repay)}。`)});S.loans=S.loans.filter(x=>x.weeks>0)}
+function financialRisk(){
+  if(S.money<0){S.crisis.negativeWeeks++;if(!S.crisis.seen&&!hasOpenModal()){S.crisis.seen=true;showCrisis()}if(S.crisis.negativeWeeks>=10||S.money<=-600000)gameOver()}
+  else{S.crisis.negativeWeeks=0;if(S.money>200000)S.crisis.seen=false}
+}
+
+/* ---------- 员工 ---------- */
+function processStaff(){
+  let c=S.corporate;c.bonusCooldown=Math.max(0,c.bonusCooldown-1);c.campaignCooldown=Math.max(0,c.campaignCooldown-1);c.eventCooldown=Math.max(0,c.eventCooldown-1);c.poachCooldown=Math.max(0,c.poachCooldown-1);
+  S.staff.forEach(e=>{
+    if(!e.status){e.energy=clamp(e.energy+18+S.facilities.coffee*4+S.facilities.sofa*2,0,100);e.creativity=clamp(e.creativity+3,-30,8);e.mood='自主学习';return}
+    let st=e.status;
+    if(st.kind==='rest'){st.weeks--;e.energy=clamp(e.energy+35+S.facilities.sofa*8,0,100);e.creativity=clamp(e.creativity+5,-30,8);e.mood='恢复中';if(st.weeks<=0){e.status=null;e.mood='精神饱满';addNews('休息结束',`${e.name} 恢复了精神。`,e.name)}}
+    else if(st.kind==='train'){st.weeks--;e.energy=clamp(e.energy-8,0,100);e.mood='训练中';if(st.weeks<=0){let gain=rnd(4,7)+Math.round(researchBonus('training'));e.stats[st.key]=Math.min(STAT_CAP,e.stats[st.key]+gain);e.xp+=1;e.status=null;e.mood='学有所成';addNews('培训完成',`${e.name} 的${DIM_LABEL[st.key]}能力提升 ${gain} 点。`,e.name)}}
+    else if(st.kind==='project')e.mood=e.energy<35?'疲惫赶工':'专注开发';
+    else if(st.kind==='outsource')e.mood='外包冲刺';
+    else if(st.kind==='maintenance')e.mood='维护旧作';
+  });
+  let danger=S.staff.find(e=>e.energy<15&&e.status?.kind==='project'&&!e.status.warned);
+  if(danger&&!hasOpenModal()){danger.status.warned=true;S.alert={type:'fatigue',staffId:danger.id};pauseForModal();toast(`${danger.name} 体力告急，时间已暂停。`)}
+}
+
+/* ---------- 项目开发 ---------- */
+function teamOf(p){return p.team.map(staffById).filter(Boolean)}
+function projectMods(p){
+  let lead=staffById(p.leader),leadBonus=lead?.specialty==='专家'?.08:0,mg=masteryLevel('genre',p.genre),mt=masteryLevel('theme',p.theme);
+  return{common:1+(p.synergy||50)/1000+leadBonus+researchBonus('quality')+S.investments.engine*.04+mg*.03+mt*.015,mastery:mg+mt};
+}
+function memberPower(e,key,p){return e.stats[key]*effect(e)*(1+traitBonus(e,key,p)+preferenceBonus(e,p))*creativityFactor(e)}
+function processProjects(){
+  for(let p of S.projects){
+    if(p.paused||p.stage==='debug'||p.pendingDecision!=null)continue;
+    let phase=p.phases[p.phase],key=PHASE_KEY[phase]||'idea',team=teamOf(p),size=SIZES[p.size]||SIZES.small,mods=projectMods(p);
+    if(!team.length){p.paused=true;addNews('项目暂停',`《${p.name}》因没有可用成员而暂停。`,p.name);continue}
+    /* 四维产出：本阶段主维度全额，其余维度 25% */
+    let gains={code:0,art:0,music:0,idea:0},popups=[];
+    team.forEach(e=>{DIMS.forEach(k=>{let share=k===key?1:.25,v=memberPower(e,k,p)*(1+facilityBonus(k))*mods.common*dirMult(p.direction[k])/20*size.quality*share;gains[k]+=v;if(v>=.9)popups.push({staffId:e.id,key:k,v})})});
+    DIMS.forEach(k=>p.quality[k]+=gains[k]);
+    p.progress+=size.progress;
+    spawnPopups(p,popups);
+    /* 体力、经验、成长 */
+    let coach=team.some(e=>e.trait==='新人教练');
+    team.forEach(e=>{e.energy=clamp(e.energy-rnd(3,5),0,100);e.xp+=coach&&e.lvl<4?2:1;let need=8+e.lvl*3;if(e.xp>=need){e.xp-=need;e.lvl++;DIMS.forEach(k=>e.stats[k]=Math.min(STAT_CAP,e.stats[k]+rnd(1,3)));e.salary=Math.round(e.salary*1.1/100)*100;if(e.lvl>=3&&!e.specialty)e.mood='可选择发展方向';addNews('员工成长',`${e.name} 升至 Lv.${e.lvl}。`,e.name);bubble(e.id,'升级！','#ffe18a')}});
+    /* Bug */
+    let low=team.some(e=>e.energy<35),safe=team.some(e=>['代码洁癖','细节控','逻辑控'].includes(e.trait)),wild=team.some(e=>e.trait==='怪点子'),bugChance=(low?.40:.15)-(safe?.05:0)+(wild?.03:0);
+    if(Math.random()<bugChance){let b=rnd(1,3);p.bugs+=b;devLog(p,`测试发现 ${b} 个 Bug（累计 ${p.bugs}）`);bubble(team[rnd(0,team.length-1)].id,'Bug!','#f08a8a')}
+    /* 随机现场事件 */
+    if(Math.random()<.08){
+      let ev=pick([()=>{p.quality.idea+=6;bubble(pick(team).id,'灵感爆发！','#ffe18a');return'灵感爆发，创意 +6'},()=>{p.bugs+=3;p.progress=Math.max(0,p.progress-8);return'返工暴露 3 个 Bug，进度 -8'},()=>{p.progress+=10;p.synergy=clamp(p.synergy+2,10,95);return'团队默契让进度 +10'}]);
+      let msg=ev();p.sceneEvent='idea';devLog(p,msg);addNews('项目现场',`《${p.name}》${msg}。`,p.name);
+    }else devLog(p,`${phase}：${DIMS.filter(k=>gains[k]>=.5).map(k=>`${DIM_LABEL[k]} +${gains[k].toFixed(1)}`).join('、')}`);
+    /* 阶段推进 */
+    if(p.progress>=100){
+      p.progress=0;p.phase++;
+      if(S.investments.qa&&p.bugs){let cut=Math.min(p.bugs,Math.ceil(S.investments.qa*1.35));p.bugs-=cut;devLog(p,`质量保障消除 ${cut} 个问题`)}
+      if(p.phase>=p.phases.length){p.stage='debug';p.bugs+=rnd(3,8);p.sceneEvent='bug';devLog(p,`开发完成，进入调试：${p.bugs} 个 Bug`);addNews('开发完成',`《${p.name}》进入调试，发现 ${p.bugs} 个 Bug。`,p.name);S.alert={type:'debug',projectId:p.id};pauseForModal();toast(`《${p.name}》开发完成，时间已暂停：请在项目卡上调试或发行。`);break}
+      addNews('阶段完成',`《${p.name}》进入${p.phases[p.phase]}。`,p.name);devLog(p,`进入${p.phases[p.phase]}`);
+      if(DECISIONS[p.phase]){openStageDecision(p);break}
+    }
+  }
+}
+function spawnPopups(p,list){
+  if(activePage!=='home'||document.hidden||!list.length)return;
+  let dur=Math.max(900,WEEK_MS/Math.max(1,preferredSpeed))-300;
+  shuffle(list).slice(0,9).forEach(x=>{setTimeout(()=>{if(!S)return;let i=S.staff.findIndex(e=>e.id===x.staffId);if(i<0)return;let pos=employeePos(S.staff[i],i,performance.now()/170);FX.push({x:pos.x+rnd(-8,8),y:pos.y-30,text:`${DIM_LABEL[x.key]}+${x.v>=10?Math.round(x.v):x.v.toFixed(1)}`,color:DIM_COLOR[x.key],t0:performance.now(),life:1300})},rnd(0,dur))});
+}
+function bubble(staffId,text,color='#fff'){if(activePage!=='home'||document.hidden)return;let i=S.staff.findIndex(e=>e.id===staffId);if(i<0)return;let pos=employeePos(S.staff[i],i,performance.now()/170);FX.push({x:pos.x,y:pos.y-34,text,color,t0:performance.now(),life:1800,big:true})}
+
+/* ---------- 阶段抉择 ---------- */
+function openStageDecision(p){
+  S.decisionProjectId=p.id;p.pendingDecision=p.phase;p.pendingChoices=p.pendingChoices||shuffle(DECISIONS[p.phase]).slice(0,3);
+  let lead=staffById(p.leader);
+  openDlg(`《${p.name}》· ${p.phases[p.phase]}抉择`,`<div class="scene-text"><b>${esc(lead?.name||'制作人')}正在征询方向。</b>每次都会从方案池中抽取三个选择。</div>${p.pendingChoices.map((x,i)=>`<div class="choice"><h3>${x[0]}</h3><p>${x[1]}</p><button class="primary" onclick="applyDecision(${i})">采用这个方向</button></div>`).join('')}`,'<button onclick="skipDecision()">暂不决定</button>',{noClose:true,onCancel:skipDecision});
+}
+function applyDecision(i){
+  let p=projectById(S.decisionProjectId),choice=p?.pendingChoices?.[i];if(!p||!choice)return closeDlg();
+  let c=choice[2],team=teamOf(p),has=t=>team.some(e=>e.trait===t);
+  if(c==='stable'){p.bugs=Math.max(0,p.bugs-(has('逻辑控')||has('代码洁癖')?4:3));p.progress=Math.max(0,p.progress-6)}
+  if(c==='rush'){p.progress+=20+(has('速度派')?8:0);p.bugs+=5;team.forEach(e=>e.energy=clamp(e.energy-(e.trait==='速度派'||e.trait==='高压领队'?5:8),0,100))}
+  if(c==='refactor'){p.quality.code+=8+(has('架构思维')?4:0);p.finance.events+=20000;p.finance.total+=20000;S.money-=20000}
+  if(c==='style'){p.quality.art+=7+(has('色彩控')?4:0);p.bugs=Math.max(0,p.bugs-1)}
+  if(c==='effects'){p.quality.art+=11+(has('视觉狂热')?2:0);p.bugs+=3}
+  if(c==='budget'){p.finance.events-=15000;p.finance.total=Math.max(0,p.finance.total-15000);S.money+=15000;p.quality.art+=2}
+  if(c==='fix'){p.bugs=Math.max(0,p.bugs-(has('细节控')?7:5));p.progress+=5}
+  if(c==='content'){p.quality.idea+=6+(has('怪点子')||has('叙事强迫症')?4:0);p.bugs+=2}
+  if(c==='ship')p.progress+=15;
+  p.decisions.push(choice[0]);p.pendingDecision=null;p.pendingChoices=null;p.sceneEvent=c==='effects'?'idea':c==='rush'?'bug':'focus';devLog(p,`抉择：${choice[0]}`);addNews('关键抉择',`《${p.name}》选择「${choice[0]}」。`,p.name);save();closeDlg();
+}
+function skipDecision(){let p=projectById(S.decisionProjectId);if(p){p.pendingDecision=null;p.pendingChoices=null;p.sceneEvent='focus'}save();closeDlg()}
+
+/* ---------- 外包 ---------- */
+function processOutsource(){
+  if(S.outsourceCooldown)S.outsourceCooldown--;let o=S.outsource;if(!o)return;let j=JOBS.find(x=>x.id===o.id),team=o.team.map(staffById).filter(Boolean);
+  o.weeksLeft--;o.quality+=team.reduce((a,e)=>a+e.stats[j.need]*effect(e),0)/Math.max(1,team.length);team.forEach(e=>{e.energy=clamp(e.energy-rnd(j.drain[0],j.drain[1]),0,100);e.creativity=clamp(e.creativity-4,-30,8)});
+  if(o.weeksLeft<=0){let avg=o.quality/o.totalWeeks,ratio=avg>=50?1.1:avg>=38?1:avg>=30?.8:.55,income=Math.round(rnd(j.minPay,j.maxPay)*ratio*(1-S.corporate.contractPenalty));S.money+=income;finYear(S.year).income+=income;team.forEach(e=>{if(e.status?.kind==='outsource')e.status=null});S.outsource=null;S.outsourceCooldown=4;addNews('外包结算',`${j.name}完成，质量 ${Math.round(avg)}，到账 ${money(income)}。`,j.name);toast(`外包结算：${money(income)}。`)}
+}
+
+/* ---------- 销售 ---------- */
+function scoreRatio(score){let r=score<5?[.4,.65]:score<6?[.85,1.15]:score<7?[1.2,1.65]:score<8?[1.6,2.2]:score<9?[2.3,3.1]:[3.3,4.3];return r[0]+Math.random()*(r[1]-r[0])}
+function applySale(s,gross){
+  let g=gameById(s.gameId);if(!g)return;let pl=platform(g.platform),platformCut=Math.round(gross*pl.share),publisherCut=g.publisher==='星河发行'?Math.round(gross*.18):0,net=gross-platformCut-publisherCut,units=Math.max(1,Math.round(gross/g.price));
+  g.gross+=gross;g.platformCut+=platformCut;g.publisherCut=(g.publisherCut||0)+publisherCut;g.netRevenue+=net;g.units+=units;g.profit=g.netRevenue-g.finance.total;S.money+=net;finYear(S.year).income+=net;
+  let ip=S.ips.find(x=>x.id===g.ipId);if(ip)ip.totalUnits+=units;
+  let tag=!g.salesHistory.length?'发售':(g.salesStatus==='重新推广'||g.salesStatus==='长尾回升')&&!g.salesHistory.at(-1).t?'推广':null;
+  g.salesHistory.push({y:S.year,m:S.month,w:S.week,u:units,n:net,t:tag});if(g.salesHistory.length>90)g.salesHistory=g.salesHistory.slice(-90);
+}
+function processSales(){
+  let done=[];
+  S.sales.forEach(s=>{let g=gameById(s.gameId);if(!g||s.weekIndex>=s.weights.length){done.push(s);return}
+    let gross=Math.round(s.targetGross*s.weights[s.weekIndex]*(.97+Math.random()*.06)),bu=g.units,bn=g.netRevenue;applySale(s,gross);s.weekIndex++;
+    g.salesWeek=s.weekIndex;g.salesWeeks=s.weights.length;g.lastWeekUnits=g.units-bu;g.lastWeekNet=g.netRevenue-bn;g.salesStatus=s.weekIndex>=s.weights.length?'销售周期完成':s.weekIndex<=2?'首发热卖':s.weekIndex<=6?'稳定销售':'长尾销售';
+    if(s.weekIndex>=s.weights.length){done.push(s);addNews('销售周期完成',`《${g.name}》累计售出 ${g.units.toLocaleString()} 份，净收入 ${money(g.netRevenue)}。`,g.name)}});
+  S.sales=S.sales.filter(s=>!done.includes(s));
+}
+function boostLongTail(g,type){
+  let active=S.sales.find(x=>x.gameId===g.id),factor={patch:.08,update:.22,expansion:.55}[type],weights=[.34,.25,.18,.13,.10],ip=S.ips.find(x=>x.id===g.ipId);
+  if(type==='update'){g.goodwill=(g.goodwill||0)+8;if(ip)ip.goodwill+=8}
+  if(active){active.targetGross*=1+factor+(g.goodwill||0)/400;g.salesStatus='长尾回升'}
+  else{S.sales.push({gameId:g.id,targetGross:Math.max(g.finance.total*factor,g.netRevenue*factor*.8,30000)*(1+(g.goodwill||0)/100),weekIndex:0,weights});g.salesWeek=0;g.salesWeeks=weights.length;g.salesStatus='重新推广'}
+}
+function processPostOps(){
+  S.postOps=S.postOps.filter(op=>{op.weeks--;if(op.weeks>0)return true;let g=gameById(op.gameId),e=staffById(op.staffId);if(e&&e.status?.kind==='maintenance'){e.status=null;e.mood='维护完成'}
+    if(g){if(op.type==='patch'){g.bugs=Math.max(0,g.bugs-5);g.goodwill=(g.goodwill||0)+3}if(op.type==='update')g.goodwill=(g.goodwill||0)+8;if(op.type==='expansion'){let ip=S.ips.find(x=>x.id===g.ipId);if(ip)ip.recognition+=8}boostLongTail(g,op.type);addNews('发行后运营',`《${g.name}》${op.label}完成，新增长尾销售已经启动。`,g.name)}return false});
+}
+function progressTrend(){S.trend.weeks--;if(S.trend.weeks>0)return;if(S.trend.stage==='升温期'){S.trend.stage='热门期';S.trend.weeks=8}else if(S.trend.stage==='热门期'){S.trend.stage='降温期';S.trend.weeks=8}else S.trend=newTrend();addNews('市场风向',`${S.trend.name}${trendLabel(S.trend.category)}进入${S.trend.stage}。`,S.trend.name)}
+
+/* ---------- 行业事件 ---------- */
+function eventDef(kind){
+  let active=S.projects.find(p=>!p.paused),latest=S.games[0],top=[...S.staff].sort((a,b)=>b.lvl-a.lvl)[0],map={
+    expo:['年度游戏展邀请','支付 ¥80,000 搭建展台，可以积累粉丝并提高下一款作品的首发关注。','参展','放弃'],
+    training:['制作人训练营','支付 ¥95,000 让全员参加训练，员工会获得经验并恢复创作状态。','报名','不参加'],
+    engine:['商业引擎授权到期','支付 ¥220,000 买下关键工具授权，可直接提升一级自研引擎；拒绝则当前项目增加技术债。','购买授权','继续凑合'],
+    streamer:['主播试玩邀约',latest?`头部主播愿意以 ¥50,000 合作试玩《${latest.name}》，可为旧作重新带来长尾销量。`:'头部主播愿意参观公司，支付 ¥50,000 可以积累第一批核心粉丝。','合作','婉拒'],
+    leak:['开发版本意外泄露','支付 ¥90,000 启动危机公关；若保持沉默，公司名气和项目稳定性都会受损。','危机公关','保持沉默'],
+    outage:['服务器与备份故障',active?`《${active.name}》的开发资料出现损坏。支付 ¥140,000 紧急恢复，否则项目将返工并增加 Bug。`:'公司备份系统出现故障。支付 ¥140,000 可以完成基础设施修复。','紧急恢复','承担损失'],
+    platformFund:['平台独占扶持','平台愿意提供 ¥160,000 开发金，但下一次外包与作品发行需要承担额外渠道分成。','接受扶持','保持独立'],
+    audit:['财务合规审查','支付 ¥100,000 完成账目整改；拖延处理只需 ¥45,000，但会损失名气。','彻底整改','最低处理'],
+    festival:['玩家嘉年华','支付 ¥75,000 举办玩家活动，可显著积累粉丝与社区影响力。','举办活动','今年不办'],
+    awardCampaign:['奖项公关季','支付 ¥130,000 进行媒体看片与评奖推广，提高本年度各奖项的竞争力。','启动公关','作品说话'],
+    renovation:['办公室设备老化','支付 ¥160,000 完成设备翻新；推迟会让全员损失体力和创作状态。','立即翻新','推迟处理'],
+    grant:['原创游戏扶持计划','接受 ¥90,000 扶持金并获得研发点，但公开开发日志会轻微损失神秘感。','接受扶持','不申请'],
+    interview:['行业媒体专访','接受采访可以增加名气，但也会让竞争公司更早了解你的项目方向。','接受采访','低调开发'],
+    producer:['独立制作人来访',`一位 Lv.2 制作人希望加入公司，签约费 ¥90,000${top?`（当前最高等级成员 ${top.name} Lv.${top.lvl}）`:''}。`,'签约','婉拒'],
+    trip:['团队创作旅行','花费 ¥35,000 安排短途采风，可恢复全员体力与创作状态。','出发','留在公司']
+  },d=map[kind];return{kind,title:d[0],text:d[1],acceptLabel:d[2],declineLabel:d[3]};
+}
+function maybeEvent(){
+  if(S.event||S.corporate.eventCooldown||Math.random()>.038)return;
+  let recent=new Set(S.eventHistory.slice(-4).map(x=>x.kind)),pool=EVENT_KINDS.filter(x=>!recent.has(x));
+  if(!S.projects.length)pool=pool.filter(x=>!['leak','outage'].includes(x));if(S.staff.length>=officeDef().cap)pool=pool.filter(x=>x!=='producer');
+  S.event=eventDef(pick(pool));S.corporate.eventCooldown=7;showEvent();
+}
+function showEvent(){let ev=S.event;if(!ev)return;openDlg(ev.title,`<p class="hint">${esc(ev.text)}</p>`,`<button onclick="resolveEvent(false)">${esc(ev.declineLabel)}</button><button class="primary" onclick="resolveEvent(true)">${esc(ev.acceptLabel)}</button>`,{noClose:true,onCancel:()=>resolveEvent(false)})}
+function spend(cost){if(S.money<cost){toast('公司资金不足，无法选择这个方案。');return false}S.money-=cost;return true}
+function resolveEvent(accept){
+  let ev=S.event;if(!ev)return closeDlg();let ok=true,active=S.projects.find(p=>!p.paused),latest=S.games[0],top=[...S.staff].sort((a,b)=>b.lvl-a.lvl)[0],k=ev.kind;
+  if(accept){
+    if(k==='expo'&&(ok=spend(80000))){S.fans+=650;S.fame+=.6;S.corporate.nextLaunchBoost=Math.max(S.corporate.nextLaunchBoost,.1)}
+    if(k==='training'&&(ok=spend(95000)))S.staff.forEach(e=>{e.xp+=2;e.energy=clamp(e.energy+15,0,100);e.creativity=clamp(e.creativity+7,-30,8)});
+    if(k==='engine'&&(ok=spend(220000)))S.investments.engine=Math.min(INVESTMENTS.engine.max,S.investments.engine+1);
+    if(k==='streamer'&&(ok=spend(50000))){S.fans+=latest?500:280;if(latest)boostLongTail(latest,'update')}
+    if(k==='leak'&&(ok=spend(90000))){S.fame+=.2;if(active)active.bugs=Math.max(0,active.bugs-2)}
+    if(k==='outage'&&(ok=spend(140000)))S.investments.qa=Math.min(5,S.investments.qa+1);
+    if(k==='platformFund'){S.money+=160000;S.corporate.contractPenalty=Math.max(S.corporate.contractPenalty,.12)}
+    if(k==='audit'&&(ok=spend(100000)))S.fame+=.25;
+    if(k==='festival'&&(ok=spend(75000))){S.fans+=950;AUDIENCES.forEach(a=>S.audiences[a]+=12)}
+    if(k==='awardCampaign'&&(ok=spend(130000)))S.corporate.awardBoost=Math.max(S.corporate.awardBoost,.5);
+    if(k==='renovation'&&(ok=spend(160000)))S.staff.forEach(e=>e.energy=clamp(e.energy+10,0,100));
+    if(k==='grant'){S.money+=90000;S.rp+=3;S.fame=Math.max(0,S.fame-.2)}
+    if(k==='interview'){S.fame+=.7;S.fans+=180;S.rivals.forEach(r=>r.momentum=clamp(r.momentum+.15,0,5))}
+    if(k==='producer'){if(S.staff.length>=officeDef().cap){toast('办公室没有空位。');ok=false}else if(ok=spend(90000)){let used=new Set(S.staff.map(x=>x.name)),prof=shuffle(PROFILES).find(p=>p[1]==='producer'&&!used.has(p[0]))||shuffle(PROFILES).find(p=>!used.has(p[0])),e=prof?staffFromProfile(prof,2):makeStaff(uniqueName(),'producer',2);S.staff.push(e);addNews('新成员',`${e.name} 加入团队，担任制作人。`,e.name)}}
+    if(k==='trip'&&(ok=spend(35000)))S.staff.forEach(e=>{e.energy=clamp(e.energy+22,0,100);e.creativity=clamp(e.creativity+10,-30,8)});
+  }else{
+    if(k==='engine'&&active)active.bugs+=4;
+    if(k==='leak'){S.fame=Math.max(0,S.fame-1);S.fans=Math.max(0,Math.round(S.fans*.9));if(active)active.bugs+=3}
+    if(k==='outage'&&active){active.progress=Math.max(0,active.progress-22);active.bugs+=6}
+    if(k==='audit'){S.money-=Math.min(Math.max(0,S.money),45000);S.fame=Math.max(0,S.fame-1.1)}
+    if(k==='renovation')S.staff.forEach(e=>{e.energy=clamp(e.energy-12,0,100);e.creativity=clamp(e.creativity-5,-30,8)});
+  }
+  if(!ok)return;
+  S.eventHistory.push({year:S.year,month:S.month,week:S.week,kind:k,title:ev.title,accepted:!!accept});S.eventHistory=S.eventHistory.slice(-40);
+  addNews('行业事件',`${accept?'公司接受了':'公司拒绝了'}「${ev.title}」。`,ev.title);S.event=null;save();closeDlg();
+}
+
+/* ---------- 挖角 ---------- */
+function retainChance(e){let others=S.staff.filter(x=>x.id!==e.id),vals=others.map(x=>S.bonds[pairKey(e.id,x.id)]||50),avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:50;return clamp(.34+(e.goalDone?.22:0)+(e.energy>=60?.14:0)+(avg-50)/180+(e.creativity>0?.08:0),.15,.92)}
+function removeStaff(e){
+  S.staff=S.staff.filter(x=>x.id!==e.id);
+  S.projects.forEach(p=>{if(p.team.includes(e.id)){p.team=p.team.filter(i=>i!==e.id);if(p.leader===e.id)p.leader=p.team[0]||null;if(!p.team.length&&!p.paused&&p.stage!=='debug'){p.paused=true;addNews('项目暂停',`《${p.name}》因人手不足而暂停。`,p.name)}}});
+  if(S.outsource?.team)S.outsource.team=S.outsource.team.filter(i=>i!==e.id);
+}
+function maybePoach(){
+  if(S.poach||S.event||S.corporate.poachCooldown||S.staff.length<=2||(!S.games.length&&S.year<2029))return;
+  let busy=new Set(S.outsource?.team||[]),targets=S.staff.filter(e=>e.lvl>=3&&!busy.has(e.id));if(!targets.length)return;
+  let heat=Math.max(0,...S.rivals.map(r=>r.momentum));if(Math.random()>.010+heat*.004)return;
+  let weight=e=>e.lvl*2+(100-e.energy)/25+(e.goalDone?0:2)+(e.creativity<0?2:0),target=[...targets].sort((a,b)=>weight(b)-weight(a))[0],rival=[...S.rivals].sort((a,b)=>(b.momentum+b.power)-(a.momentum+a.power))[rnd(0,1)];
+  S.poach={staffId:target.id,rivalId:rival.id,raise:Math.max(2000,Math.round(target.salary*.25/500)*500),comp:Math.round(target.salary*4/1000)*1000};S.corporate.poachCooldown=18;showPoach();
+}
+function showPoach(){
+  let po=S.poach;if(!po)return;let e=staffById(po.staffId),r=S.rivals.find(x=>x.id===po.rivalId);if(!e){S.poach=null;return}
+  let stay=Math.round(retainChance(e)*100);
+  openDlg('挖角危机',`<div class="scene-text"><b>${esc(r?.name||'竞争对手')} 正在挖角 ${esc(e.name)}（${ROLES[e.role][0]} Lv.${e.lvl}）。</b>对方开出了约 1.6 倍薪资。${e.goalDone?'':' TA 的个人目标尚未实现，此刻更容易动摇。'}${e.energy<50?' 长期疲劳也在动摇 TA 的去留。':''}</div>
+  <div class="choice"><h3>加薪留人</h3><p>月薪永久提高 ${money(po.raise)}（当前 ${money(e.salary)}），并稳定 TA 的状态。</p><button class="primary" onclick="resolvePoach('raise')">批准加薪</button></div>
+  <div class="choice"><h3>好聚好散</h3><p>收取转会补偿 ${money(po.comp)}，${esc(e.name)} 将加入对方，竞争公司实力增强。</p><button onclick="resolvePoach('sell')">放人转会</button></div>
+  <div class="choice"><h3>真诚挽留</h3><p>不花钱，以愿景和情谊留人。当前成功率约 ${stay}%；失败 TA 会直接离开且没有补偿。</p><button class="orange" onclick="resolvePoach('talk')">彻夜长谈</button></div>`,'<button onclick="closeDlg()">下周再谈</button>',{noClose:true,onCancel:closeDlg});
+}
+function resolvePoach(action){
+  let po=S.poach;if(!po)return closeDlg();let e=staffById(po.staffId),r=S.rivals.find(x=>x.id===po.rivalId);
+  if(e&&action==='raise'){e.salary+=po.raise;e.energy=clamp(e.energy+8,0,100);e.creativity=clamp(e.creativity+5,-30,8);if(r)r.momentum=clamp(r.momentum+.4,0,5);addNews('挖角化解',`${e.name} 接受加薪留了下来，月薪 ${money(e.salary)}。`,e.name)}
+  else if(e&&action==='sell'){S.money+=po.comp;removeStaff(e);if(r){r.power=clamp(r.power+.035,.95,1.72);r.momentum=clamp(r.momentum+1,0,5)}addNews('明星转会',`${e.name} 转投 ${r?.name||'竞争对手'}，公司收到 ${money(po.comp)} 转会补偿。`,e.name)}
+  else if(e&&action==='talk'){if(Math.random()<retainChance(e)){e.creativity=8;e.energy=clamp(e.energy+10,0,100);S.fame+=.2;addNews('深夜长谈',`${e.name} 决定留下来，把没做完的故事做完。`,e.name)}else{removeStaff(e);if(r){r.power=clamp(r.power+.045,.95,1.72);r.momentum=clamp(r.momentum+1,0,5)}addNews('人才流失',`挽留失败，${e.name} 加入了 ${r?.name||'竞争对手'}。`,e.name);toast(`${e.name} 离开了公司。`)}}
+  S.poach=null;save();closeDlg();
+}
+
+/* ---------- 年度结算：竞品、评奖、目标 ---------- */
+function rivalTitle(genre,seed){let a=['零界','霓虹','深海','赤星','微光','边境','回声','终端'],b={动作:'突袭',射击:'火线',RPG:'传说',冒险:'档案',益智:'谜阵',模拟:'物语',经营:'大亨',策略:'战线',大型:'纪元'};return`${a[seed%a.length]}${b[genre]||'计划'}`}
+function simulateRivalSeason(year){
+  let all=[],age=Math.max(0,year-START_YEAR),scale=1+age*.055;
+  S.rivals.forEach((r,i)=>{let count=2+(r.power>1.18?1:0)+(r.momentum>=2&&Math.random()<.5?1:0),season=[],income=0,profit=0;
+    for(let n=0;n<count;n++){let genre=r.specialties[n%r.specialties.length],score=clamp(r.quality+r.tech*.08+(Math.random()-.5)*1.25,5.4,9.7),gross=Math.round((170000+score*score*10500)*r.power*scale*(.88+Math.random()*.28)),cost=Math.round(gross*(.47+Math.random()*.1)),q={art:clamp(score+(Math.random()-.5)*1.3,4,10),code:clamp(score+(r.tech-2)*.18+(Math.random()-.5),4,10),music:clamp(score+(Math.random()-.5)*1.5,4,10),idea:clamp(score+(Math.random()-.5)*1.25,4,10)},g={title:rivalTitle(genre,i*7+n+year),genre,score:+score.toFixed(1),gross,cost,profit:gross-cost,quality:q,company:r.name,rivalId:r.id,isPlayer:false};season.push(g);all.push(g);income+=gross;profit+=gross-cost}
+    r.income=income;r.profit=profit;r.cash+=profit;r.seasonHistory[year]={income,profit,games:season.map(x=>({title:x.title,genre:x.genre,score:x.score,gross:x.gross,profit:x.profit}))};r.games.push({year,count,score:+Math.max(...season.map(x=>x.score)).toFixed(1)});
+    r.power=clamp(r.power+.018+Math.random()*.025+r.momentum*.004,.98,1.72);r.quality=clamp(r.quality+.018+Math.random()*.045,6.8,9.35);if((year+i)%4===0)r.tech=Math.min(7,r.tech+1)});
+  return all;
+}
+function playerAwardCandidate(g){let q=g.quality,readiness=g.mechanics?.readiness||1,pop=Math.min(10,Math.log10((g.units||0)+10)*2.65);return{title:g.name,genre:g.genre,score:g.score,gross:g.netRevenue||0,quality:{art:clamp(g.score*.56+Math.min(10,q.art/2.5)*.44,1,10),code:clamp(g.score*.55+readiness*10*.45,1,10),music:clamp(g.score*.56+Math.min(10,q.music/2.5)*.44,1,10),idea:clamp(g.score*.56+Math.min(10,q.idea/2.5)*.44,1,10)},popularity:clamp(g.score*.55+pop*.45,1,10),company:S.company,isPlayer:true,gameRef:g}}
+function rivalAwardMetric(g,key){if(key==='goty')return g.score;if(key==='popularity')return clamp(g.score*.58+Math.min(10,Math.log10(g.gross+10)*1.48)*.42,1,10);return g.quality[key]||g.score}
+function chooseAwards(year,rivalGames){
+  let player=S.games.filter(g=>g.release?.startsWith(String(year))).map(playerAwardCandidate),all=[...player,...rivalGames],boost=S.corporate.awardBoost||0,cats=[['年度游戏','goty'],['最佳美术','art'],['最佳技术','code'],['最佳音乐','music'],['最佳创意','idea'],['玩家选择','popularity']];
+  let res=cats.map(([name,key])=>{let ranked=all.map(g=>({g,value:(g.isPlayer?(key==='goty'?g.score:key==='popularity'?g.popularity:g.quality[key]):rivalAwardMetric(g,key))+(g.isPlayer?boost:0)})).sort((a,b)=>b.value-a.value),win=ranked[0];return{name,key,winner:win?.g||null,value:win?.value||0}});
+  S.corporate.awardBoost=0;return res;
+}
+function applyAwardRewards(res,year){let wins=0;res.forEach(r=>{let w=r.winner;if(!w)return;if(w.isPlayer){wins++;let top=r.key==='goty';S.fame=Math.min(99,S.fame+(top?3:1));S.fans+=top?900:260;S.rp+=top?6:2;if(top)S.money+=150000;w.gameRef.awards=w.gameRef.awards||[];w.gameRef.awards.push(`${year} ${r.name}`);let ip=S.ips.find(x=>x.id===w.gameRef.ipId);if(ip)ip.recognition+=top?14:5;
+    S.staff.forEach(e=>{if(!e.goalDone&&e.works.some(x=>x.name===w.gameRef.name)&&/获奖|年度游戏|最佳美术|最佳音乐/.test(e.goal||'')){if((/最佳美术/.test(e.goal)&&r.key!=='art')||(/最佳音乐/.test(e.goal)&&r.key!=='music')||(/年度游戏/.test(e.goal)&&r.key!=='goty'))return;e.goalDone=true;S.fame+=.3;addNews('个人目标',`${e.name} 完成了目标「${e.goal}」。`,e.name)}})}
+  else{let rival=S.rivals.find(x=>x.id===w.rivalId);if(rival){rival.awards++;rival.momentum=clamp(rival.momentum+1,0,5)}}});return wins}
+function rankings(year=S.year){let me={name:S.company,style:S.brand,income:S.games.filter(g=>g.release?.startsWith(String(year))).reduce((a,g)=>a+g.netRevenue,0),me:true},elapsed=(S.month-1)*4+S.week,forecast=.52+elapsed/48*.55,rivals=S.rivals.map(r=>({name:r.name,style:r.style,income:r.seasonHistory[year]?.income??Math.round((r.income||600000)*forecast)}));return[me,...rivals].sort((a,b)=>b.income-a.income)}
+function goalProgress(g,year=S.annualGoalYear||S.year){
+  if(!g)return 0;let yg=S.games.filter(x=>x.release?.startsWith(String(year))),k=g[0];
+  if(k==='release')return yg.length;if(k==='score')return yg.reduce((m,x)=>Math.max(m,x.score),0);if(k==='profit')return yg.reduce((a,x)=>a+x.profit,0)>0?1:0;if(k==='grow')return S.staff.filter(e=>e.lvl>=2).length;
+  if(k==='rank')return rankings(year).findIndex(x=>x.me)+1<=3?1:0;if(k==='hof')return yg.some(x=>x.total>=HOF_THRESHOLD)?1:0;
+  if(k==='platform'){let known=new Set(S.annualGoalKnownPlatforms||[]);return yg.some(x=>!known.has(x.platform))?1:0}return 0;
+}
+function brandStyle(){let gs=S.games,a=gs.reduce((x,g)=>x+g.quality.art,0),c=gs.reduce((x,g)=>x+g.quality.code,0),i=gs.reduce((x,g)=>x+g.quality.idea,0),high=gs.filter(g=>g.score>=8).length;if(high>=3)return'游戏艺术家';if(gs.length>=6&&gs.filter(g=>g.genre==='RPG'||g.genre==='冒险').length>=3)return'叙事大师';if(a>c&&a>i)return'视觉名家';if(c>a&&c>i)return'技术驱动';if(i>a&&i>c)return'创意先锋';if(gs.length>=5)return'商业爆款工厂';return'尚在形成'}
+function annualClose(){
+  let year=S.year-1,yg=S.games.filter(g=>g.release?.startsWith(String(year))),rivalGames=simulateRivalSeason(year),res=chooseAwards(year,rivalGames),wins=applyAwardRewards(res,year),rank=rankings(year),myRank=rank.findIndex(x=>x.me)+1,goal=S.annualGoal,done=goal&&goalProgress(goal,year)>=goal[2];
+  if(done){S.rp+=8;S.fame+=2;addNews('年度目标达成',`${goal[1]}完成，获得研发点与品牌关注。`)}
+  S.fame=Math.max(0,S.fame*.95);S.brand=brandStyle();S.staff.forEach(e=>e.salary=Math.round(e.salary*1.05/100)*100);S.yearRecords[year]=`${year} 年：发行 ${yg.length} 款，行业收入排名 #${myRank}，获得 ${wins} 项奖项${done?'，年度目标达成。':'。'}`;
+  S.awardHistory.push({year,playerWins:wins,categories:res.map(r=>({name:r.name,winner:r.winner?.title||'空缺',company:r.winner?.company||'',isPlayer:!!r.winner?.isPlayer}))});
+  S.annualGoal=null;S.annualGoalYear=null;S.annualGoalKnownPlatforms=[];ensurePlatforms();if(S.year>=EVAL_YEAR&&!S.evaluationSeen)S.pendingEvaluation=true;
+  addNews('年度评奖',`${year} 年金像素奖揭晓，公司获得 ${wins} 项奖。全员薪资年度普调 5%。`);
+  showAwards(year,res,wins);
+}
+function showAwards(year,res,wins){
+  let rows=res.map(r=>`<div class="award-row ${r.winner?.isPlayer?'win':''}"><span>${r.name}</span><b>${r.winner?`《${esc(r.winner.title)}》`:'空缺'}</b><small>${esc(r.winner?.company||'—')}${r.winner?.isPlayer?' · 你的公司':''}</small></div>`).join('');
+  openDlg(`${year} 年金像素奖`,`${rows}<p class="hint">${S.yearRecords[year]}${wins?` 公司获得 ${wins} 座奖杯。`:' 本年度奖项均被竞争公司夺得。'}</p>`,`<button class="primary" onclick="chooseAnnualGoal()">制定 ${S.year} 年目标</button>${S.pendingEvaluation?'<button class="orange" onclick="openEvaluation()">查看十年董事会评估</button>':''}<button onclick="closeDlg()">稍后再说</button>`,{noClose:true,onCancel:closeDlg});
+}
+function chooseAnnualGoal(){openDlg(`${S.year} 年董事会目标`,`<p class="hint">目标会在年末结算，完成后获得 8 研发点与名气 +2。</p>${GOALS.map((g,i)=>`<div class="choice"><h3>${g[1]}</h3><button onclick="setAnnualGoal(${i})">定为年度目标</button></div>`).join('')}`,'<button onclick="closeDlg()">暂不设定</button>')}
+function setAnnualGoal(i){S.annualGoal=[...GOALS[i]];S.annualGoalYear=S.year;S.annualGoalKnownPlatforms=[...new Set(S.games.map(x=>x.platform))];addNews('年度目标',`董事会目标：${S.annualGoal[1]}。`);save();closeDlg()}
+function openEvaluation(){
+  let profit=S.games.reduce((a,g)=>a+(g.profit||0),0),best=[...S.games].sort((a,b)=>b.score-a.score)[0],wins=S.awardHistory.reduce((a,x)=>a+(x.playerWins||0),0),hof=S.hallOfFame.length,valuation=Math.max(0,S.money*.15+profit*.15+S.fans*80+S.fame*50000+wins*180000+hof*400000),grade=valuation>=60000000?'S':valuation>=30000000?'A':valuation>=12000000?'B':valuation>=4000000?'C':'D',legacy=Math.max(2,{S:12,A:9,B:6,C:4,D:2}[grade]);
+  let old=readMeta();writeMeta({legacy:Math.max(old.legacy||0,legacy),bestGrade:[old.bestGrade,grade].filter(Boolean).sort()[0]||grade});S.evaluationSeen=true;S.pendingEvaluation=false;
+  openDlg(`${EVAL_YEAR} 年 · 十年董事会评估`,`<div class="grade">${grade}</div><h2 style="text-align:center">公司估值 ${money(valuation)}</h2><p style="text-align:center">十年发行 ${S.games.length} 款 · 最佳评分 ${best?best.score.toFixed(1):'—'} · 获奖 ${wins} 项 · 名人堂 ${hof} 款 · 粉丝 ${S.fans.toLocaleString()}</p><p class="hint">本局获得 ${legacy} 点传承研发经验。你可以继续经营，也可以带着经验重新创业。</p>`,`<button onclick="closeDlg()">继续经营</button><button class="primary" onclick="legacyRestart()">带着经验重新创业</button>`,{noClose:true,onCancel:closeDlg});addNews('十年评估',`董事会给出 ${grade} 级评价，公司估值 ${money(valuation)}。`);save();
+}
+function legacyRestart(){let d=byId('dlg');if(d.open)d.close();modalSpeed=null;newGame()}
+
+/* ---------- 危机 / 结束 ---------- */
+function showCrisis(){
+  openDlg('公司危机',`<p class="hint">当前资金 ${money(S.money)}。第一次资金跌破 0 不会立刻结束，但连续 10 周为负或负债超过 ¥600,000 将判定破产。</p><div class="actions"><button class="primary" onclick="takeLoan()">短期贷款 ¥300,000<br><small>48 周后偿还 ¥360,000</small></button><button class="orange" onclick="crisisOutsource()">寻找紧急外包</button><button onclick="pauseAllProjects()">暂停所有项目</button></div>`,'<button onclick="closeDlg()">继续经营</button>',{noClose:true,onCancel:closeDlg});
+}
+function takeLoan(){if(S.loans.length>=2)return toast('最多同时持有两笔贷款。');S.money+=300000;S.loans.push({weeks:48,repay:360000});addNews('短期贷款','获得 ¥300,000 短期贷款，48 周后偿还 ¥360,000。');save();closeDlg()}
+function crisisOutsource(){closeDlg();openOutsource('urgent')}
+function pauseAllProjects(){S.projects.forEach(p=>{if(p.stage!=='debug'){p.paused=true;p.team.forEach(id=>{let e=staffById(id);if(e&&e.status?.kind==='project')e.status=null})}});addNews('项目暂停','所有开发项目已暂停，团队转为空闲。');save();closeDlg()}
+function gameOver(){openDlg('公司停止营业','<p class="hint">资金链已无法维持。下一次创业会更有经验。</p>','<button class="primary" onclick="newGame()">重新创业</button><button onclick="showStart()">返回标题</button>',{noClose:true,onCancel:()=>{}})}
+/* =====================================================================
+   玩家操作：立项、开发方向、调试、发行与评测、招聘、培训、设施、研发、投资、外包、运营
+   ===================================================================== */
+let dirPts={code:2,art:2,music:2,idea:2};
+
+/* ---------- 立项 ---------- */
+function openProject(ipId=null){
+  if(S.projects.length>=capacity())return toast(`当前公司等级最多同时推进 ${capacity()} 个项目。`);
+  if(S.staff.filter(e=>!e.status).length<2)return toast('至少需要 2 名空闲员工才能立项。');
+  ensurePlatforms();S.nextIp=ipId;let ip=ipId&&S.ips.find(x=>x.id===ipId);
+  byId('projectTitle').textContent=ip?`续作立项：《${ip.name}》系列`:'立项：做一款新游戏';
+  byId('psize').innerHTML=Object.entries(SIZES).map(([k,v])=>`<option value="${k}" ${S.level<v.need?'disabled':''}>${v.label}${S.level<v.need?`（需公司 Lv.${v.need}）`:''}</option>`).join('');
+  byId('pgenre').innerHTML=S.unlocked.genres.map(x=>`<option>${x}</option>`).join('');byId('ptheme').innerHTML=S.unlocked.themes.map(x=>`<option>${x}</option>`).join('');
+  byId('pplatform').innerHTML=S.platforms.filter(x=>platform(x.n).available).map(x=>{let p=platform(x.n);return`<option value="${p.n}">${p.n} · ${p.users} 万用户 · ${p.stage} · 授权 ${money(p.fee)}</option>`}).join('');
+  byId('pname').value=ip?`${ip.name}${ip.entries+1}`:'';if(ip){byId('pgenre').value=ip.genre;byId('ptheme').value=ip.theme}
+  byId('psize').value='small';byId('pmarketing').value='0';byId('ppublisher').value='独立发行';
+  dirPts={code:2,art:2,music:2,idea:2};
+  byId('dirPresets').innerHTML=DIR_PRESETS.map((p,i)=>`<button onclick="applyPreset(${i})">${p[0]}</button>`).join('');
+  byId('projectPicks').innerHTML=S.staff.map((e,i)=>{let ok=!e.status,spec=e.specialty?` · ${e.specialty}`:'';return`<label class="pick ${ok?'':'dim'}"><input type="checkbox" value="${e.id}" ${ok&&i<3?'checked':''} ${ok?'':'disabled'} onchange="previewProject()"><span>${esc(e.name)}<small>${ROLES[e.role][0]} Lv.${e.lvl} · 体力 ${e.energy} · ${esc(e.trait)}${esc(spec)}</small></span></label>`}).join('');
+  previewProject();pauseForModal();let d=byId('projectDialog');if(!d.open)d.showModal();d.querySelector('.dbody').scrollTop=0;
+}
+function closeProjectDialog(){let d=byId('projectDialog');if(d.open)d.close();S.nextIp=null;resumeAfterModal();render()}
+function applyPreset(i){dirPts={...DIR_PRESETS[i][1]};previewProject()}
+function adjDir(k,d){let total=DIMS.reduce((a,x)=>a+dirPts[x],0),v=dirPts[k]+d;if(v<0||v>DIR_MAX)return;if(d>0&&total>=DIR_POINTS)return toast('方向点数已用完，先从别的维度减一点。');dirPts[k]=v;previewProject()}
+function comboLineHtml(g,t){
+  let known=S.combos[comboKey(g,t)],pl=platform(byId('pplatform').value),pref=pl.genre===g?` · 平台 ${pl.n} 偏好 ${g}`:'';
+  if(known){let d=COMBO_DEF[known.tier];return`<span>${g} × ${t}：<b class="stars ${d.cls==='c'?'bad':''}">${d.stars}</b> ${d.label}</span><small class="muted">已尝试 ${known.tried} 次 · 最佳 ${known.best.toFixed(1)} 分${pref}</small>`}
+  return`<span>${g} × ${t}：<b class="stars unknown">？</b> 未验证</span><small class="muted">契合度会在发行后揭晓并记入图鉴${pref}</small>`;
+}
+function previewProject(){
+  let g=byId('pgenre').value,t=byId('ptheme').value,pl=platform(byId('pplatform').value),size=SIZES[byId('psize').value]||SIZES.small,ids=[...document.querySelectorAll('#projectPicks input:checked')].map(x=>+x.value),team=ids.map(staffById).filter(Boolean),mk=+byId('pmarketing').value,weeks=Math.ceil(100/size.progress)*4,base=size.base+pl.fee+mk,syn=teamSynergy(ids),m=platformMetrics(g,pl.n,team),creative=team.length?team.reduce((a,e)=>a+e.creativity,0)/team.length:0,w=GENRE_W[g],used=DIMS.reduce((a,k)=>a+dirPts[k],0),mg=masteryLevel('genre',g),mt=masteryLevel('theme',t);
+  byId('comboLine').innerHTML=comboLineHtml(g,t);
+  byId('dirLeft').textContent=`${DIR_POINTS-used} / ${DIR_POINTS}`;
+  byId('dirBox').innerHTML=DIMS.map(k=>`<div class="${k}"><span>${DIM_LABEL[k]}</span><b>${dirPts[k]}</b><div class="pm"><button onclick="adjDir('${k}',-1)">−</button><button onclick="adjDir('${k}',1)">＋</button></div><small>×${dirMult(dirPts[k]).toFixed(2)}</small><i style="width:${dirPts[k]/DIR_MAX*100}%"></i></div>`).join('');
+  byId('dirWeights').innerHTML=`<b>${g}</b> 类型的评论家看重：${DIMS.slice().sort((a,b)=>w[b]-w[a]).map(k=>`<b style="color:${DIM_COLOR[k]}">${DIM_LABEL[k]} ${Math.round(w[k]*100)}%</b>`).join(' · ')}`;
+  byId('projectPreview').innerHTML=`<b>预计 ${weeks} 周 · 首期投入 ${money(base)} · 市场需求 ×${size.demand.toFixed(2)}</b><br>团队默契 ${syn} · 平均创作状态 ${Math.round(creative)} · 类型熟练 Lv.${mg} / 题材熟练 Lv.${mt}<br>平台 ${pl.stage} · 用户规模 ×${m.userFactor.toFixed(2)} · 技术适配 ${Math.round(m.readiness*100)}%<br>粉丝触达 ×${fanBoost().toFixed(2)} · 营销触达 ×${marketingBoost(mk).toFixed(2)} · ${byId('ppublisher').value==='星河发行'?'发行商扩大销量，支付 18% 分成':'独立发行利润更高，但依赖自有受众'}`;
+}
+function startProject(){
+  let ids=[...document.querySelectorAll('#projectPicks input:checked')].map(x=>+x.value);if(ids.length<2||ids.length>3)return toast('请选择 2—3 名可用员工。');
+  if(ids.map(staffById).some(e=>!e||e.status))return toast('有成员已经不再空闲。');
+  let sizeKey=byId('psize').value,size=SIZES[sizeKey],pl=platform(byId('pplatform').value),mk=+byId('pmarketing').value,upfront=size.base+pl.fee+mk;
+  if(S.level<size.need)return toast(`需要公司等级 ${size.need}。`);if(S.money<upfront)return toast('资金不足，无法覆盖立项成本。');
+  if(DIMS.reduce((a,k)=>a+dirPts[k],0)<DIR_POINTS)return toast('还有开发方向点数没有分配。');
+  let ip=S.nextIp&&S.ips.find(x=>x.id===S.nextIp),g=byId('pgenre').value,t=byId('ptheme').value,name=byId('pname').value.trim()||`${t}计划`;
+  let p={id:`p_${Date.now()}_${rnd(10,99)}`,name,size:sizeKey,genre:g,theme:t,platform:pl.n,marketing:mk,publisher:byId('ppublisher').value,team:ids,leader:ids.slice().sort((a,b)=>staffById(b).lvl-staffById(a).lvl)[0],phase:0,phases:PHASES.slice(),stage:'dev',progress:0,quality:{code:0,art:0,music:0,idea:0},direction:{...dirPts},bugs:0,paused:false,synergy:teamSynergy(ids),decisions:[],pendingDecision:null,pendingChoices:null,sceneEvent:'focus',startTrend:{...S.trend},log:[],
+    finance:{base:size.base,platform:pl.fee,marketing:mk,wages:0,debug:0,events:0,total:upfront},ipId:ip?ip.id:null,sequelBonus:ip?Math.min(.6,ip.entries*.12+ip.bestScore*.03):0,reboot:!!(ip&&ip.rebootPlanned)};
+  S.money-=upfront;ids.forEach(id=>{let e=staffById(id);e.status={kind:'project',projectId:p.id};e.mood=`负责《${name}》`});S.projects.push(p);S.nextIp=null;
+  devLog(p,`立项：${g} × ${t} · ${pl.n} · 方向 ${DIMS.map(k=>DIM_LABEL[k][0]+dirPts[k]).join('/')}`);addNews('项目立项',`《${name}》立项，${ids.length} 人团队开始企划。`,name);
+  let d=byId('projectDialog');if(d.open)d.close();S.alert=null;save();resumeAfterModal();render();toast(`《${name}》开始开发。`);
+}
+function resumeProject(id){let p=projectById(id);if(!p||!p.paused)return;let m=teamOf(p),busy=m.filter(e=>e.status&&e.status.kind!=='project');if(busy.length)return toast(`请等待 ${busy.map(e=>e.name).join('、')} 完成当前安排。`);if(!m.length)return toast('项目已没有成员，请先补充人员。');p.paused=false;m.forEach(e=>{e.status={kind:'project',projectId:p.id};e.mood=`负责《${p.name}》`});addNews('项目恢复',`《${p.name}》恢复开发。`,p.name);save();render()}
+function pauseProject(id){let p=projectById(id);if(!p||p.paused||p.stage==='debug')return;p.paused=true;p.team.forEach(i=>{let e=staffById(i);if(e&&e.status?.kind==='project')e.status=null});addNews('项目暂停',`《${p.name}》暂停，团队转为空闲。`,p.name);save();render()}
+function addMember(id){let p=projectById(id);if(!p||p.team.length>=3)return toast('团队已满。');let free=S.staff.filter(e=>!e.status);if(!free.length)return toast('没有空闲员工。');openDlg(`为《${p.name}》补充成员`,free.map(e=>`<div class="person"><div class="avatar" style="background:${e.color}">${ROLES[e.role][0][0]}</div><main><h3>${esc(e.name)} <span class="tag">${ROLES[e.role][0]} Lv.${e.lvl}</span></h3><p>体力 ${e.energy} · ${esc(e.trait)}</p></main><aside><button class="primary" onclick="doAddMember('${p.id}',${e.id})">加入</button></aside></div>`).join(''))}
+function doAddMember(pid,eid){let p=projectById(pid),e=staffById(eid);if(!p||!e||e.status)return closeDlg();p.team.push(eid);e.status={kind:'project',projectId:p.id};e.mood=`负责《${p.name}》`;p.synergy=teamSynergy(p.team);if(!p.leader)p.leader=eid;if(p.paused)p.paused=false;devLog(p,`${e.name} 加入团队`);addNews('团队调整',`${e.name} 加入《${p.name}》。`,p.name);save();closeDlg()}
+function debugProject(id,polish=false){
+  let p=projectById(id);if(!p||p.stage!=='debug')return;let cost=polish?85000:36000;if(S.money<cost)return toast('资金不足，无法继续调试。');
+  S.money-=cost;p.finance.debug+=cost;p.finance.total+=cost;let cut=polish?rnd(5,9):rnd(7,13);p.bugs=Math.max(0,p.bugs-cut);if(polish)DIMS.forEach(k=>p.quality[k]+=rnd(2,5));
+  devLog(p,`${polish?'打磨':'调试'}：Bug -${cut}，剩余 ${p.bugs}`);addNews(polish?'继续打磨':'集中调试',`《${p.name}》剩余 ${p.bugs} 个 Bug。`,p.name);save();render();
+}
+
+/* ---------- 发行与评测 ---------- */
+function weightedQuality(p){let w=GENRE_W[p.genre]||GENRE_W.RPG;return DIMS.reduce((a,k)=>a+w[k]*p.quality[k],0)}
+function critique(p,base,ctx){
+  let q=p.quality,mean=Math.max(1,DIMS.reduce((a,k)=>a+q[k],0)/4),rel=Object.fromEntries(DIMS.map(k=>[k,(q[k]-mean)/mean])),ip=ctx.ip,known=ctx.comboKnownBefore,peak=Math.max(...DIMS.map(k=>p.direction[k]));
+  let vals={
+    zhou:base-.25-Math.max(0,p.bugs-2)*.12+rel.code*2.2+(ctx.readiness-1)*1.5,
+    can:base+.35+(ctx.market-1)*2+rel.idea*1.8+(ctx.combo.mult-1)*1.5,
+    mo:base+(rel.art+rel.music)*1.4,
+    k:base-.1+rel.idea*2+(known?0:.5)+(ip&&ip.entries>=3?-.5:0)+(ctx.fresh<55?-.4:0)+(peak>=5?.3:0)
+  };
+  return CRITICS.map(c=>{let sc=clamp(Math.round(vals[c.id]+(Math.random()-.5)*.8),1,10);return{id:c.id,score:sc,quote:critiqueQuote(c.id,sc,p,ctx,rel)}});
+}
+function critiqueQuote(id,sc,p,ctx,rel){
+  let hi=sc>=8,lo=sc<=5,pool;
+  if(id==='zhou'){if(p.bugs>=8)return'“好想法被首发版本的 Bug 拖累了，建议等补丁。”';pool=hi?['“完成度扎实，每个系统都经得起推敲。”','“很久没见到这么干净的首发版本了。”']:lo?['“基本功不过关，很多功能像是没做完。”','“技术层面的粗糙让我很难坚持玩下去。”']:['“中规中矩，能正常玩，但也仅此而已。”','“系统完整，缺少令人眼前一亮的技术细节。”']}
+  if(id==='can'){if(ctx.market>1.15)return'“正赶上大家都想玩这种游戏的时候，太会挑时机了！”';if(ctx.combo.tier==='S')return'“这个搭配简直是天作之合，一玩就停不下来。”';if(ctx.combo.tier==='C')return'“类型和题材总感觉拧着劲，玩起来不太顺。”';pool=hi?['“太好玩了，周末就这么没了。”','“朋友都在讨论这款，赶紧上车。”']:lo?['“玩了两小时就想退款，可惜了。”','“它不知道自己想给谁玩。”']:['“有几个不错的点子，但整体略显平淡。”','“值回票价，但不会推荐给所有人。”']}
+  if(id==='mo'){let best=rel.art>rel.music?'画面':'音乐';pool=hi?[`“${best}表现堪称本季最佳，每一帧都用了心。”`,'“视听语言统一而克制，是一件完整的作品。”']:lo?['“美术与音乐像来自两个团队，气质割裂。”','“视听表现明显低于同期作品的平均水平。”']:['“视听层面稳妥，但没有留下记忆点。”',`“${best}是亮点，另一半则略显敷衍。”`]}
+  if(id==='k'){if(!ctx.comboKnownBefore&&hi)return'“一次没人尝试过的组合，而且成功了。”';if(ctx.ip&&ctx.ip.entries>=3)return'“系列第 '+ctx.ip.entries+' 部了，我在等它敢于改变的那一天。”';if(ctx.fresh<55)return'“熟悉的配方仍然可靠，但玩家开始期待一些新东西了。”';pool=hi?['“它有自己的表达，这在今天太稀缺了。”','“不迎合任何人，反而抓住了我。”']:lo?['“安全牌打得太多，没有任何冒险。”','“看得出预算，看不出想法。”']:['“有想法，但执行只走到了一半。”','“愿意在续作里看到它更大胆一点。”']}
+  return pick(pool);
+}
+function checkGoals(team,g){
+  team.forEach(e=>{if(e.goalDone)return;let goal=e.goal||'',done=/8 分/.test(goal)?g.score>=8:/7 分/.test(goal)?g.score>=7:/三款/.test(goal)?e.works.length>=3:/Lv\.(\d)/.test(goal)?e.lvl>=+goal.match(/Lv\.(\d)/)[1]:/一万/.test(goal)?S.fans>=10000:/第一款/.test(goal)?true:/代表作|被记住|名场景|结局|配乐|玩法/.test(goal)?g.score>=7.5:goal.includes(g.genre)||goal.includes(g.theme);
+    if(done){e.goalDone=true;e.energy=clamp(e.energy+12,0,100);S.fame+=.3;addNews('个人目标',`${e.name} 完成了目标「${goal}」。`,e.name)}});
+}
+function releaseProject(id){
+  let p=projectById(id);if(!p||p.stage!=='debug')return;
+  let team=teamOf(p),size=SIZES[p.size]||SIZES.small,qa=weightedQuality(p),combo=COMBO_DEF[comboTier(p.genre,p.theme)],market=trendFactor(p),metrics=platformMetrics(p.genre,p.platform,team),audience=audienceStrength(p.genre),audienceBoost=1+Math.min(.28,audience/1100),mk=marketingBoost(p.marketing),publisherReach=p.publisher==='星河发行'?1.32:1,ip=p.ipId&&S.ips.find(x=>x.id===p.ipId),ipBoost=1+Math.min(.3,(ip?.expectation||0)/100),fatigue=ip&&S.year-ip.lastYear<2?ip.entries*.06:0,rival=rivalPressure(p),goodwill=1+Math.min(.2,(ip?.goodwill||0)/100),fameScore=Math.min(S.fame*.02,.6),mastery=masteryLevel('genre',p.genre)+masteryLevel('theme',p.theme);
+  if(S.investments.qa)p.bugs=Math.max(0,p.bugs-S.investments.qa*2);
+  let techScore=clamp((metrics.readiness-1)*.8,-.3,.2),traitScore=team.some(e=>e.trait==='市场嗅觉')&&market>1?.12:0;
+  let expect=marketExpectation(),base=clamp(5.8+1.87*Math.log(Math.max(8,qa)/expect)+(combo.mult-1)*2.6+(market-1)*1.3+fameScore-p.bugs*.08+(p.synergy-50)/120+(p.sequelBonus||0)+techScore+traitScore-fatigue+mastery*.06,1,10);
+  let known=comboKnown(p.genre,p.theme),fresh=ip?ip.freshness:100;if(p.reboot&&ip){ip.freshness=115;ip.rebootPlanned=false;fresh=115}
+  let reviews=critique(p,base,{market,combo,readiness:metrics.readiness,ip,comboKnownBefore:known,fresh}),total=reviews.reduce((a,r)=>a+r.score,0),score=Math.round(total/4*10)/10;
+  let productionCost=Math.max(1,p.finance.total-p.marketing),community=1+S.investments.community*.04,campaign=1+S.corporate.nextLaunchBoost,penalty=1-S.corporate.contractPenalty,freshF=ip&&ip.entries>0?clamp(.65+fresh/100*.45,.6,1.2):1;
+  let targetGross=productionCost*scoreRatio(score)*metrics.userFactor*audienceBoost*fanBoost()*mk*publisherReach*ipBoost*size.demand*rival*goodwill*(1+researchBonus('sales'))*community*campaign*penalty*freshF;
+  let unitCap=Math.round(metrics.pl.users*10000*.10+S.fans*1.5),capped=false;if(targetGross>unitCap*size.price){targetGross=unitCap*size.price;capped=true}
+  let gid=Date.now(),weights=score<5?[.3,.23,.16,.1,.07,.05,.03,.025,.02,.01,.005]:[.3,.19,.13,.09,.07,.06,.05,.04,.03,.02,.015,.005];
+  let game={...p,id:gid,score,total,reviews,release:`${S.year}.${S.month}`,releaseYear:S.year,price:size.price,gross:0,platformCut:0,publisherCut:0,netRevenue:0,profit:-p.finance.total,units:0,market,ratio:targetGross/productionCost,mechanics:{userFactor:metrics.userFactor,audienceBoost,fanBoost:fanBoost(),marketingBoost:mk,publisherReach,ipBoost,sizeDemand:size.demand,rivalPressure:rival,readiness:metrics.readiness,communityBoost:community,capped,campaignBoost:campaign,freshness:+freshF.toFixed(2)},salesWeek:0,salesWeeks:weights.length,salesStatus:'新品发售',lastWeekUnits:0,lastWeekNet:0,salesHistory:[],ipFreshAtLaunch:Math.round(fresh),comboTier:combo===COMBO_DEF.S?'S':comboTier(p.genre,p.theme),hof:total>=HOF_THRESHOLD};
+  delete game.log;delete game.pendingChoices;S.corporate.nextLaunchBoost=0;S.corporate.contractPenalty=0;
+  /* IP */
+  if(!ip){ip={id:`ip_${gid}`,name:p.name,genre:p.genre,theme:p.theme,entries:0,totalUnits:0,bestScore:0,recognition:0,expectation:0,goodwill:0,lastYear:S.year,status:'active',freshness:100,rebootPlanned:false};S.ips.push(ip)}
+  else{if(p.reboot){S.fans+=260;addNews('经典重启',`《${p.name}》唤起系列玩家的怀旧热情。`,p.name)}else if(fresh<55)addNews('审美疲劳',`市场认为《${ip.name}》系列更新过于频繁，首发触达打折。`,p.name);ip.freshness=clamp(ip.freshness-24,0,120)}
+  ip.entries++;ip.bestScore=Math.max(ip.bestScore,score);ip.recognition+=Math.round(score*3);ip.expectation=Math.max(0,ip.expectation-5);ip.lastYear=S.year;game.ipId=ip.id;
+  S.games.unshift(game);S.sales.push({gameId:gid,targetGross,weekIndex:0,weights});
+  (AUDIENCE_MAP[p.genre]||['核心玩家']).forEach((x,i)=>S.audiences[x]+=Math.round(score*(i?9:15)));
+  /* 图鉴、熟练度、名人堂 */
+  let ck=comboKey(p.genre,p.theme),rec=S.combos[ck]||(S.combos[ck]={tried:0,best:0,tier:comboTier(p.genre,p.theme)});rec.tried++;rec.best=Math.max(rec.best,score);
+  let mxp=p.size==='large'?3:p.size==='normal'?2:1,mgBefore=masteryLevel('genre',p.genre),mtBefore=masteryLevel('theme',p.theme);S.mastery.genre[p.genre]=(S.mastery.genre[p.genre]||0)+mxp;S.mastery.theme[p.theme]=(S.mastery.theme[p.theme]||0)+mxp;
+  let masteryUp=[];if(masteryLevel('genre',p.genre)>mgBefore)masteryUp.push(`${p.genre} 熟练度 Lv.${masteryLevel('genre',p.genre)}`);if(masteryLevel('theme',p.theme)>mtBefore)masteryUp.push(`${p.theme} 熟练度 Lv.${masteryLevel('theme',p.theme)}`);
+  if(game.hof){S.hallOfFame.push(gid);S.fame+=2;S.fans+=400;ip.expectation+=20;addNews('名人堂',`《${p.name}》以 ${total}/40 分进入名人堂。`,p.name)}
+  /* 团队 */
+  team.forEach(e=>{e.status=null;e.works.push({name:p.name,score});if(!e.proud||score>e.proud.score)e.proud={name:p.name,score};for(let j of p.team)if(e.id!==j)S.bonds[pairKey(e.id,j)]=clamp((S.bonds[pairKey(e.id,j)]||50)+(score>=7?8:3)-(e.energy<25?4:0),10,95)});checkGoals(team,game);
+  S.fans+=Math.round(score*18*(p.publisher==='星河发行'?1.25:1));S.fame=Math.min(99,S.fame+(score>=8?1:score>=6?.4:.1));S.rp+=Math.max(2,Math.round(score/2));S.level=1+Math.floor((S.fame+S.games.length*2)/13);
+  S.projects=S.projects.filter(x=>x.id!==p.id);S.brand=brandStyle();if(S.alert?.projectId===p.id)S.alert=null;
+  addNews('正式发行',`《${p.name}》评测总分 ${total}/40，销量将从下周开始结算。`,p.name);save();
+  showReview(game,{known,masteryUp});
+}
+function rivalPressure(p){let relevant=S.rivals.filter(r=>r.specialties.some(x=>x===p.genre||x===p.theme||(x==='大型'&&p.size==='large'))),intel=S.investments.intelligence;if(!relevant.length)return clamp(1+intel*.025,.82,1.04);let threat=relevant.reduce((m,r)=>Math.max(m,r.power+r.momentum*.03),1);return clamp(1-relevant.length*.045-Math.max(0,threat-1)*.22+intel*.035,.62,1.02)}
+function showReview(g,extra={}){
+  let d=byId('reviewDialog'),combo=COMBO_DEF[comboTier(g.genre,g.theme)],body=byId('reviewBody');
+  body.innerHTML=`<div class="mag"><div class="mh"><div><small>${g.genre} · ${g.theme} · ${g.platform} · ${g.release}</small><h1>《${esc(g.name)}》</h1></div><div class="total"><b id="revTotal">—</b><small>总分 / 40</small></div></div>
+  <div class="critics">${g.reviews.map((r,i)=>{let c=CRITICS.find(x=>x.id===r.id);return`<div class="critic" id="crit${i}"><div class="ico">${c.ico}</div><div class="nm">${c.name}</div><div class="sc ${r.score>=8?'hi':r.score<=4?'lo':''}">${r.score}</div><div class="q">${esc(r.quote)}</div></div>`}).join('')}</div>
+  ${g.hof?`<div class="hof">★ 殿堂级作品 · 进入名人堂 ★</div>`:''}
+  <div class="reveal-combo">${extra.known?`${g.genre} × ${g.theme}：<b>${combo.stars} ${combo.label}</b>（图鉴已记录，最佳 ${S.combos[comboKey(g.genre,g.theme)].best.toFixed(1)} 分）`:`组合揭晓！${g.genre} × ${g.theme} = <b>${combo.stars} ${combo.label}</b>，已记入图鉴。`}${extra.masteryUp?.length?`<br>${extra.masteryUp.join('、')} 提升！`:''}</div></div>
+  <div class="hint">评论家各自看重不同维度：老周盯 Bug 与程序，阿灿看市场热度与创意，林墨看画面与音乐，K 偏爱新尝试。总分决定销量倍率；${HOF_THRESHOLD} 分以上进入名人堂。</div>`;
+  pauseForModal();if(!d.open)d.showModal();
+  g.reviews.forEach((r,i)=>setTimeout(()=>{let el=byId(`crit${i}`);if(el)el.classList.add('show');if(i===g.reviews.length-1){let t=byId('revTotal');if(t)t.textContent=g.total}},250+i*380));
+}
+function closeReview(){let d=byId('reviewDialog');if(d.open)d.close();resumeAfterModal();render()}
+
+/* ---------- 发行后运营 / 续作 ---------- */
+function openPostOps(id){let g=gameById(id);if(!g)return;let free=S.staff.filter(e=>!e.status).length;openDlg(`《${g.name}》· 发行后运营`,`<p class="hint">可用维护人手：${free}。补丁降低 Bug；免费更新提高好感与长尾；资料片适合高口碑作品（7.5 分以上）。</p><div class="actions"><button onclick="startPostOp(${id},'patch')">修复补丁 · ¥18,000</button><button onclick="startPostOp(${id},'update')">免费更新 · ¥36,000</button><button ${g.score<7.5?'disabled':''} onclick="startPostOp(${id},'expansion')">资料片 · ¥120,000</button><button onclick="stopMaintenance(${id})">停止维护</button></div>`)}
+function startPostOp(id,type){let defs={patch:['修复补丁',18000,2],update:['免费更新',36000,3],expansion:['资料片',120000,5]},d=defs[type],g=gameById(id),e=S.staff.find(x=>!x.status);if(!g||!d)return;if(S.postOps.some(x=>x.gameId===id))return toast('这款作品已有维护任务。');if(!e)return toast('没有空闲员工可维护旧作。');if(S.money<d[1])return toast('资金不足。');S.money-=d[1];e.status={kind:'maintenance',weeks:d[2],gameId:id};e.mood=`维护《${g.name}》`;S.postOps.push({gameId:id,type,label:d[0],weeks:d[2],staffId:e.id});addNews('发行后运营',`${e.name} 开始为《${g.name}》执行${d[0]}。`,g.name);save();closeDlg()}
+function stopMaintenance(id){let ids=new Set(S.postOps.filter(x=>x.gameId===id).map(x=>x.staffId));S.postOps=S.postOps.filter(x=>x.gameId!==id);S.staff.forEach(e=>{if(ids.has(e.id)&&e.status?.kind==='maintenance')e.status=null});addNews('停止维护','这款旧作的维护团队已释放。');save();closeDlg()}
+function startSequel(ipId){closeDlg();openProject(ipId)}
+function planReboot(ipId){let ip=S.ips.find(x=>x.id===ipId);if(!ip)return;ip.rebootPlanned=true;addNews('重启企划',`《${ip.name}》系列重启企划启动，下一部续作将获得怀旧关注。`,ip.name);closeDlg();openProject(ipId)}
+
+/* ---------- 招聘 / 培训 / 休息 ---------- */
+function openRecruit(){if(S.staff.length>=officeDef().cap)return toast('办公室已满，请先升级。');drawCandidates('local');}
+function drawCandidates(ch){
+  let cost=ch==='local'?12000:ch==='web'?40000:100000,used=new Set(S.staff.map(x=>x.name)),pool=shuffle(PROFILES.filter(x=>!used.has(x[0])));
+  candidates=Array.from({length:3},(_,i)=>{let p=pool[i];let e=p?staffFromProfile(p,ch==='headhunt'?2:1):makeStaff(uniqueName(),pick(Object.keys(ROLES)),ch==='headhunt'?2:1);if(ch==='web')DIMS.forEach(k=>e.stats[k]+=3);return e});
+  openDlg('招聘候选人',`<div class="field"><label>招聘渠道</label><select onchange="drawCandidates(this.value)"><option value="local" ${ch==='local'?'selected':''}>本地招聘 · ¥1.2万</option><option value="web" ${ch==='web'?'selected':''}>人才网站 · ¥4万 · 能力略高</option><option value="headhunt" ${ch==='headhunt'?'selected':''}>猎头招聘 · ¥10万 · Lv.2 起步</option></select></div>${candidates.map((e,i)=>`<div class="person"><div class="avatar" style="background:${e.color}">${ROLES[e.role][1]}</div><main><h3>${esc(e.name)} <span class="tag">${ROLES[e.role][0]} Lv.${e.lvl}</span></h3><p>${esc(e.trait)}（${esc(e.traitText)}）<br>偏好 ${esc(e.preference)} · 目标 ${esc(e.goal)}</p><div class="statline">${DIMS.map(k=>`<span>${DIM_LABEL[k]} <b>${e.stats[k]}</b></span>`).join('')}</div></main><aside>月薪 ${money(e.salary)}<br><button class="primary" onclick="hire(${i},${cost})">聘用</button></aside></div>`).join('')}`);
+}
+function hire(i,cost){let e=candidates[i];if(!e)return;if(S.money<cost)return toast('招聘预算不足。');if(S.staff.length>=officeDef().cap)return toast('办公室没有空位。');if(S.staff.some(x=>x.name===e.name))return toast('候选人姓名重复，请重新招聘。');S.money-=cost;S.staff.push(e);addNews('新成员',`${e.name} 加入团队，担任${ROLES[e.role][0]}。`,e.name);save();closeDlg()}
+function openPerson(id){
+  let e=staffById(id);if(!e)return;let works=e.works.length?e.works.slice(-4).map(x=>`《${esc(x.name)}》${x.score.toFixed(1)}分`).join('、'):'尚未参与发行作品',proj=e.status?.kind==='project'?projectById(e.status.projectId):null;
+  openDlg('员工档案',`<div class="person-card"><div class="portrait" style="background:${e.color}">${ROLES[e.role][1]}</div><div><h2 style="margin:0">${esc(e.name)} <span class="tag">${ROLES[e.role][0]} Lv.${e.lvl}</span></h2><div class="profile-line">当前：<b>${esc(e.mood||'空闲')}</b>${proj?`（《${esc(proj.name)}》）`:''} · 体力 <b>${e.energy}</b> · 创作状态 <b>${e.creativity}</b> · 经验 ${e.xp}/${8+e.lvl*3}<br>性格：<b>${esc(e.trait)}</b>（${esc(e.traitText)}）<br>偏好：<b>${esc(e.preference)}</b> · 目标：<b>${esc(e.goal)}</b>${e.goalDone?' <span class="tag green">已达成</span>':''}<br>月薪 ${money(e.salary)}${e.specialty?` · 发展方向：<b>${e.specialty}</b>`:''}</div></div></div>
+  <div class="statline" style="margin:10px 0">${DIMS.map(k=>`<span>${DIM_LABEL[k]} <b>${e.stats[k]}</b></span>`).join('')}</div>
+  <div class="hint">创作状态：外包会降低，自主学习与休息会恢复；偏好匹配项目时品质产出 +8%。<br>参与作品：${works}${e.proud?`<br>最得意作品：《${esc(e.proud.name)}》（${e.proud.score.toFixed(1)} 分）`:''}</div>
+  ${e.lvl>=3&&!e.specialty?`<div class="choice"><h3>选择发展方向</h3><p>达到 Lv.3 后可选一次主方向。</p><button onclick="chooseSpecialty(${e.id},'专家')">领域专家 · 本职 +8，担任制作人时全队 +8%</button> <button onclick="chooseSpecialty(${e.id},'调试手')">调试手 · 程序 +3，调试更高效</button></div>`:''}
+  <h3>安排</h3><p class="muted" style="font-size:12px">培训耗时 1 周、消耗 8 点体力、¥25,000；休息一周恢复 35 点体力。培训或休息时不能参与项目和外包。</p>
+  <div class="actions">${DIMS.map(k=>`<button ${e.status?'disabled':''} onclick="scheduleTraining(${e.id},'${k}')">${DIM_LABEL[k]}培训</button>`).join('')}<button class="orange" ${e.status?'disabled':''} onclick="scheduleRest(${e.id})">休息一周</button>${S.staff.length>1?`<button class="danger" onclick="fireStaff(${e.id})">解约</button>`:''}</div>`);
+}
+function chooseSpecialty(id,x){let e=staffById(id);if(!e||e.specialty)return;e.specialty=x;if(x==='专家')e.stats[ROLES[e.role][2]]+=8;else e.stats.code+=3;e.mood='找到方向';addNews('发展方向',`${e.name} 选择成为${x}。`,e.name);save();openPerson(id)}
+function scheduleTraining(id,key){let e=staffById(id);if(!e||e.status)return toast('该员工当前无法安排。');if(S.money<25000)return toast('培训预算不足。');S.money-=25000;e.status={kind:'train',key,weeks:1};addNews('开始培训',`${e.name} 开始${DIM_LABEL[key]}培训。`,e.name);save();closeDlg()}
+function scheduleRest(id){let e=staffById(id);if(!e||e.status)return toast('该员工当前无法安排。');e.status={kind:'rest',weeks:1};e.mood='休息中';addNews('安排休息',`${e.name} 休息一周。`,e.name);save();closeDlg()}
+function fireStaff(id){let e=staffById(id);if(!e)return;if(!confirm(`确定与 ${e.name} 解约？需支付 ${money(e.salary*2)} 补偿。`))return;if(S.money<e.salary*2)return toast('资金不足以支付补偿。');S.money-=e.salary*2;removeStaff(e);S.fame=Math.max(0,S.fame-.3);addNews('人员变动',`${e.name} 离开了公司。`,e.name);save();closeDlg()}
+function emergencyRest(id){let e=staffById(id);if(!e)return;let p=S.projects.find(x=>x.team.includes(id));if(p){p.paused=true;p.team.forEach(i=>{let m=staffById(i);if(m&&m.status?.kind==='project')m.status=null});addNews('项目暂停',`因 ${e.name} 体力危险，《${p.name}》已暂停。`,p.name)}e.status={kind:'rest',weeks:1};addNews('强制休息',`${e.name} 开始休息一周。`,e.name);dismissAlert()}
+function dismissAlert(){S.alert=null;save();resumeAfterModal();render()}
+
+/* ---------- 设施 / 办公室 ---------- */
+function openFacilities(){openDlg('公司设施',`<div class="facility-grid">${Object.entries(FACILITIES).map(([id,d])=>{let lv=S.facilities[id],cost=d[3]*(lv+1);return`<div class="facility"><b>${d[0]} <span class="tag">Lv.${lv}/3</span></b><small>${d[2]}。购买后会出现在办公室中。</small><button ${lv>=3||S.money<cost?'disabled':''} onclick="buyFacility('${id}')">${lv>=3?'已满级':`升级 · ${money(cost)}`}</button></div>`}).join('')}</div>`)}
+function buyFacility(id){let d=FACILITIES[id],lv=S.facilities[id],cost=d[3]*(lv+1);if(lv>=3||S.money<cost)return;S.money-=cost;S.facilities[id]++;addNews('设施升级',`${d[0]} 升至 Lv.${S.facilities[id]}，办公室焕然一新。`,d[0]);save();openFacilities()}
+function moveOffice(){let next=OFFICES[S.office+1];if(!next)return toast('已是最高等级总部。');if(S.level<next.need)return toast(`需要公司等级 ${next.need}。`);if(S.money<next.cost)return toast('搬迁资金不足。');S.money-=next.cost;S.office++;addNews('办公室升级',`团队搬入 ${next.name}。`,next.name);save();render()}
+
+/* ---------- 研发 / 投资 ---------- */
+function unlock(kind,val,cost){if(S.rp<cost)return toast('研发点不足。');S.rp-=cost;S.unlocked[kind].push(val);addNews('研发解锁',`解锁新${kind==='genres'?'类型':'题材'}：${val}。`,val);save();render()}
+function researchUpgrade(id){let r=S.researchUpgrades,cost=12+r[id]*8;if(r[id]>=5||S.rp<cost)return;S.rp-=cost;r[id]++;addNews('长期研发',`${RESEARCH_UP.find(x=>x[0]===id)[1]}升至 Lv.${r[id]}。`);save();render()}
+function investmentCost(id){let d=INVESTMENTS[id];return d.base+d.step*S.investments[id]}
+function buyInvestment(id){let d=INVESTMENTS[id],lv=S.investments[id],cost=investmentCost(id);if(lv>=d.max)return toast('该投资已经完成。');if(S.money<cost)return toast('公司资金不足。');S.money-=cost;S.investments[id]=lv+1;addNews('公司投资',`${d.name}升至 Lv.${lv+1}，投入 ${money(cost)}。`,d.name);save();render()}
+function teamBonus(){if(S.corporate.bonusCooldown||S.money<90000)return toast('暂时无法发放奖金。');S.money-=90000;S.corporate.bonusCooldown=12;S.staff.forEach(e=>{e.energy=clamp(e.energy+28,0,100);e.creativity=clamp(e.creativity+10,-30,8)});addNews('团队激励','发放季度奖金，团队状态明显恢复。');save();render()}
+function brandCampaign(){if(S.corporate.campaignCooldown||S.money<160000)return toast('暂时无法启动品牌战役。');S.money-=160000;S.corporate.campaignCooldown=16;S.corporate.nextLaunchBoost=Math.max(S.corporate.nextLaunchBoost,.18);S.corporate.awardBoost=Math.max(S.corporate.awardBoost,.28);S.fans+=220;addNews('品牌战役','下一款作品将获得额外销售触达，本年度评奖声量上升。');save();render()}
+function surveyCombo(){
+  let cost=6,unknown=[];GENRES.forEach(g=>THEMES.forEach(t=>{if(!S.combos[comboKey(g,t)]&&S.unlocked.genres.includes(g)&&S.unlocked.themes.includes(t))unknown.push([g,t])}));
+  if(!unknown.length)return toast('已解锁的组合都已经验证过了。');if(S.rp<cost)return toast('研发点不足。');S.rp-=cost;let [g,t]=pick(unknown),tier=comboTier(g,t);S.combos[comboKey(g,t)]={tried:0,best:0,tier,surveyed:true};addNews('市场调研',`调研结果：${g} × ${t} 是${COMBO_DEF[tier].label}（${COMBO_DEF[tier].stars}）。`);toast(`调研揭晓：${g} × ${t} = ${COMBO_DEF[tier].stars} ${COMBO_DEF[tier].label}`);save();render();
+}
+
+/* ---------- 外包 ---------- */
+function openOutsource(filter=''){
+  let note=S.outsource?'已有外包正在执行。':S.outsourceCooldown?`团队还需冷却 ${S.outsourceCooldown} 周，暂不能接新外包。`:'外包会占用员工并产生疲劳；连续接单会损失团队创作状态。';
+  openDlg('选择外包工作',`<p class="hint">${note}</p>${JOBS.filter(j=>!filter||j.id===filter).map(j=>`<div class="job"><h3>${j.name} <span class="tag">${j.weeks} 周 · ${j.min}—${j.max} 人</span></h3><p>预期收入 ${money(j.minPay)}—${money(j.maxPay)}，看重${DIM_LABEL[j.need]}能力。${j.risk?'达不到质量要求会少结算。':'风险低，适合保底。'}</p><button ${S.outsource||S.outsourceCooldown?'disabled':''} onclick="selectJob('${j.id}')">安排人员</button></div>`).join('')}`);
+}
+function selectJob(id){let j=JOBS.find(x=>x.id===id),free=S.staff.filter(e=>!e.status);if(free.length<j.min)return toast('可安排的空闲员工不足。');openDlg(`${j.name}：安排人员`,`<div class="hint">选择 ${j.min}—${j.max} 名空闲员工，完成后自动结算。</div><div class="picks">${free.map((e,i)=>`<label class="pick"><input type="checkbox" value="${e.id}" ${i<j.max?'checked':''}>${esc(e.name)}<small>${ROLES[e.role][0]} · ${DIM_LABEL[j.need]} ${e.stats[j.need]} · 体力 ${e.energy}</small></label>`).join('')}</div>`,`<button onclick="openOutsource()">返回</button><button class="primary" onclick="startOutsource('${id}')">确认接单</button>`)}
+function startOutsource(id){let j=JOBS.find(x=>x.id===id),ids=[...document.querySelectorAll('#dlgBody input:checked')].map(x=>+x.value);if(ids.length<j.min||ids.length>j.max)return toast(`请选择 ${j.min}—${j.max} 人。`);if(ids.map(staffById).some(e=>!e||e.status))return toast('有成员已经不再空闲。');S.outsource={id,team:ids,weeksLeft:j.weeks,totalWeeks:j.weeks,quality:0};ids.forEach(i=>{staffById(i).status={kind:'outsource',job:id}});addNews('接下外包',`${j.name}开始执行，预计 ${j.weeks} 周后结算。`,j.name);save();closeDlg()}
+
+/* ---------- 系统 ---------- */
+function openSystemMenu(){openDlg('游戏管理',`<p class="hint">游戏会每周自动保存到本机浏览器。也可以导出为文件在其他设备导入。</p><div class="actions"><button class="primary" onclick="save();toast('进度已保存。');closeDlg()">保存进度</button><button onclick="exportSave()">导出存档</button><button onclick="openImport()">导入存档</button><button onclick="renameCompany()">公司改名</button><button onclick="closeDlg();showStart()">返回标题</button><button class="danger" onclick="deleteSave()">删除存档</button></div>`)}
+function renameCompany(){let n=prompt('新的公司名称',S.company);if(n&&n.trim()){S.company=n.trim().slice(0,12);save();render();closeDlg()}}
+function deleteSave(){if(!confirm('确定删除当前存档？此操作不可恢复。'))return;localStorage.removeItem(SAVE_KEY);localStorage.removeItem(LEGACY_KEY);S=null;document.querySelectorAll('dialog[open]').forEach(d=>d.close());modalSpeed=null;showStart()}
+function exportSave(){if(S)save();let raw=S?JSON.stringify(S):localStorage.getItem(SAVE_KEY);if(!raw)return toast('没有可导出的存档。');let blob=new Blob([raw],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`开个游戏公司存档_${S?S.year+'年':''}_${Date.now()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000);toast('存档已导出为 JSON 文件。')}
+function openImport(){openDlg('导入存档',`<p class="hint">选择之前导出的 JSON 存档文件（支持 V1.7 以后的旧版存档），或直接粘贴存档内容。导入会覆盖当前本机存档。</p><input type="file" accept=".json,application/json" onchange="importFile(this)" style="width:100%;border:1px dashed #c9b78d;border-radius:10px;padding:10px;background:#fffaf0"><textarea id="importText" rows="6" style="width:100%;margin-top:9px;border:1px solid #d4c7a8;border-radius:8px;padding:9px;font:12px monospace" placeholder="粘贴存档 JSON..."></textarea>`,`<button onclick="closeDlg()">取消</button><button class="primary" onclick="doImport()">导入并载入</button>`)}
+function importFile(input){let f=input.files&&input.files[0];if(!f)return;f.text().then(t=>{byId('importText').value=t;toast('文件已读取，点击「导入并载入」完成导入。')})}
+function doImport(){let t=byId('importText').value.trim();if(!t)return toast('请先粘贴或选择存档文件。');let obj;try{obj=JSON.parse(t)}catch{return toast('存档格式无法解析。')}if(!obj||typeof obj!=='object'||!Array.isArray(obj.staff)||!obj.year)return toast('这不是有效的公司存档。');S=normalize(obj);save();document.querySelectorAll('dialog[open]').forEach(d=>d.close());modalSpeed=null;showGame();toast('存档已导入并载入。')}
+
+/* ---------- 新游戏 / 继续 ---------- */
+function newGame(){
+  document.querySelectorAll('dialog[open]').forEach(d=>d.close());modalSpeed=null;
+  let s=fresh(),meta=readMeta(),pool=shuffle(PROFILES),chosen=[],seen=new Set();
+  for(let p of pool){if(chosen.length>=3)break;if(!seen.has(p[1])||chosen.length>=2){chosen.push(p);seen.add(p[1])}}
+  s.staff=chosen.map(p=>staffFromProfile(p));let start=pick([[980000,'精打细算'],[1180000,'稳健开局'],[1380000,'资金充裕']]);s.money=start[0];s.startingProfile=start[1];s.rp+=Math.min(12,meta.legacy||0);
+  S=normalize(s);S.trend=newTrend();addNews('公司开张',`${DEFAULT_COMPANY}以「${start[1]}」方案起步，创始团队是 ${S.staff.map(e=>e.name).join('、')}。${meta.legacy?`继承 ${Math.min(12,meta.legacy)} 点研发经验。`:''}`);
+  save();showGame();
+  if((meta.legacy||0)>=2)openDlg('创始人传承',`<p class="hint">你带着 ${meta.legacy} 点传承经验再次创业（研发点奖励已自动发放）。可以额外选择一项创始人优势，每局限一项。</p>${PERKS.map(p=>{let ok=meta.legacy>=p[2];return`<div class="choice ${ok?'':'dim'}"><h3>${p[1]} <span class="tag">需传承 ${p[2]} 点</span></h3><p>${p[3]}</p><button class="primary" ${ok?'':'disabled'} onclick="pickPerk('${p[0]}')">选择这项优势</button></div>`}).join('')}`,'<button onclick="closeDlg()">白手起家，不用优势</button>',{noClose:true,onCancel:closeDlg});
+}
+function pickPerk(id){
+  let p=PERKS.find(x=>x[0]===id);if(!p||!S)return;
+  if(id==='fund')S.money+=400000;if(id==='brand'){S.fame+=3;S.fans+=600}if(id==='tech'){S.investments.engine=Math.max(1,S.investments.engine);S.investments.qa=Math.max(1,S.investments.qa)}
+  if(id==='network'){if(S.staff.length>=officeDef().cap)S.money+=200000;else{let used=new Set(S.staff.map(x=>x.name)),prof=shuffle(PROFILES).find(x=>!used.has(x[0]));let e=staffFromProfile(prof,2);e.salary=Math.round(e.salary*1.3);S.staff.push(e)}}
+  if(id==='codex'){let list=shuffle(GENRES.flatMap(g=>THEMES.map(t=>[g,t]))).filter(([g,t])=>S.unlocked.genres.includes(g)&&S.unlocked.themes.includes(t)).slice(0,6);list.forEach(([g,t])=>S.combos[comboKey(g,t)]={tried:0,best:0,tier:comboTier(g,t),surveyed:true})}
+  addNews('创始人传承',`创始人优势「${p[1]}」生效：${p[3]}。`);save();closeDlg();toast(`已获得：${p[1]}`);
+}
+function continueGame(){let r=rawLoad();if(!r){toast('没有可用的存档。');return}try{S=normalize(r)}catch(e){toast('存档无法读取。');return}if(r._legacy){delete S._legacy;toast('已将 V1.x 存档升级到 V2.0。')}save();showGame()}
+function showGame(){
+  document.querySelectorAll('dialog[open]').forEach(d=>d.close());byId('start').classList.add('hidden');byId('game').classList.remove('hidden');activePage='home';modalSpeed=null;speed=0;
+  document.querySelectorAll('[id^="page-"]').forEach(x=>x.classList.toggle('hidden',x.id!=='page-home'));document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page==='home'));
+  render();startScene();
+  if(S.event)showEvent();else if(S.poach)showPoach();else{let p=S.projects.find(x=>x.pendingDecision!=null);if(p){S.decisionProjectId=p.id;openStageDecision(p)}}
+  if(!hasOpenModal()){if(S.alert){speed=0;modalSpeed=1;updateSpeedUI()}else setSpeed(1)}
+}
+function showStart(){clearTimeout(clockHandle);clockHandle=null;S=null;byId('game').classList.add('hidden');byId('start').classList.remove('hidden');checkContinue()}
+function checkContinue(){let r=rawLoad();byId('continueBtn').disabled=!r;byId('continueBtn').textContent=r?._legacy?'继续经营（升级旧存档）':'继续经营';let meta=readMeta(),l=byId('legacyLine');if(meta.legacy){l.classList.remove('hidden');l.textContent=`传承经验 ${meta.legacy} 点 · 历史最佳评级 ${meta.bestGrade||'—'} · 新公司可选择创始人优势。`}else l.classList.add('hidden')}
+/* =====================================================================
+   界面渲染
+   ===================================================================== */
+function page(id){activePage=id;document.querySelectorAll('[id^="page-"]').forEach(x=>x.classList.toggle('hidden',x.id!==`page-${id}`));document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===id));render();window.scrollTo({top:0})}
+function render(){
+  if(!S)return;
+  byId('companyName').textContent=S.company;byId('officeName').textContent=officeDef().name;
+  let full=`${S.year} 年 ${S.month} 月 · 第 ${S.week} 周`,clock=byId('clock');clock.title=full;clock.textContent=matchMedia('(max-width:720px)').matches?`${S.year}.${S.month} · W${S.week}`:full;
+  byId('trendline').textContent=`市场观察：${S.trend.name}${trendLabel(S.trend.category)}处于${S.trend.stage}，约剩 ${S.trend.weeks} 周。`;
+  byId('teamNum').textContent=`${S.staff.length}/${officeDef().cap}`;
+  ({home:renderHome,team:renderTeam,market:renderMarket,works:renderWorks,research:renderResearch,codex:renderCodex}[activePage]||renderHome)();
+  byId('news').innerHTML=S.news.map(n=>`<div class="news"><b>${esc(n.type)}</b>${esc(n.text)}<small>${n.year}.${n.month} · 第 ${n.week} 周${n.ref?' · '+esc(n.ref):''}</small></div>`).join('');
+  renderAlert();updateSpeedUI();
+}
+function renderAlert(){
+  let a=byId('alert'),al=S.alert;if(!al){a.classList.add('hidden');return}a.classList.remove('hidden');
+  if(al.type==='fatigue'){let e=staffById(al.staffId);if(!e){S.alert=null;return renderAlert()}a.innerHTML=`<h3>体力危险：${esc(e.name)}</h3><p>继续赶工会降低品质并提高 Bug 风险。暂停项目让 TA 休息，或者继续冒险。</p><button class="orange" onclick="emergencyRest(${e.id})">暂停项目并休息</button> <button onclick="dismissAlert()">继续赶工</button>`}
+  else if(al.type==='debug'){let p=projectById(al.projectId);if(!p){S.alert=null;return renderAlert()}a.innerHTML=`<h3>《${esc(p.name)}》开发完成</h3><p>发现 ${p.bugs} 个 Bug。可以先集中调试或打磨，再决定发行时机。时间已暂停。</p><button class="primary" onclick="page('home');dismissAlert()">去项目卡处理</button>`}
+}
+function statHtml(){let monthly=S.staff.reduce((a,e)=>a+e.salary,0)+officeDef().rent;return`<div class="grid-stats"><div class="card stat"><label>资金</label><b>${money(S.money)}</b><small>${S.money<0?'资金危机':'可维持 '+Math.max(0,Math.floor(S.money/monthly))+' 个月'}</small></div><div class="card stat"><label>名气</label><b>${S.fame.toFixed(1)}</b><small>公司 Lv.${S.level} · ${S.brand}</small></div><div class="card stat"><label>粉丝</label><b>${S.fans.toLocaleString()}</b><small>销量触达 ×${fanBoost().toFixed(2)}</small></div><div class="card stat"><label>研发点</label><b>${S.rp}</b><small>解锁与长期研发</small></div><div class="card stat"><label>办公室</label><b>${S.staff.length}/${officeDef().cap}</b><small>月租 ${money(officeDef().rent)}</small></div></div>`}
+
+/* ---------- 项目卡 ---------- */
+function projectCard(p,full=false){
+  let lead=staffById(p.leader),size=SIZES[p.size]||SIZES.small,target=size.target,stage=p.stage==='debug'?`调试中 · ${p.bugs} 个 Bug`:p.paused?'已暂停':p.pendingDecision!=null?'等待抉择':`${p.phases[p.phase]}（第 ${p.phase+1}/4 阶段）`,prog=p.stage==='debug'?100:Math.round(p.progress),w=GENRE_W[p.genre]||GENRE_W.RPG;
+  let bars=DIMS.map(k=>`<div class="qbar ${k}" title="方向 ${p.direction[k]} 点 ×${dirMult(p.direction[k]).toFixed(2)} · 评分权重 ${Math.round(w[k]*100)}%">${DIM_LABEL[k]} <small>×${dirMult(p.direction[k]).toFixed(2)}</small><b>${Math.round(p.quality[k])}</b><i style="--w:${Math.min(100,p.quality[k]/target*100)}%"></i></div>`).join('');
+  let btns=p.stage==='debug'?`<button onclick="debugProject('${p.id}',false)">集中调试 · ¥3.6万</button><button onclick="debugProject('${p.id}',true)">继续打磨 · ¥8.5万</button><button class="primary" onclick="releaseProject('${p.id}')">发行上线</button>`:p.paused?`<button class="primary" onclick="resumeProject('${p.id}')">恢复项目</button>${p.team.length<3?`<button onclick="addMember('${p.id}')">补充成员</button>`:''}`:`<button onclick="pauseProject('${p.id}')">暂停</button>${p.team.length<3?`<button onclick="addMember('${p.id}')">补充成员</button>`:''}`;
+  let log=p.log?.length?`<div class="devlog">${p.log.slice(0,full?8:3).map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'';
+  return`<div class="pcard"><div class="head"><h3>《${esc(p.name)}》 <span class="tag">${p.genre} · ${p.theme}</span></h3><b>${prog}%</b></div><small>${stage} · ${p.platform} · 制作人 ${esc(lead?.name||'待定')} · ${p.publisher}</small><div class="bar"><i style="width:${prog}%"></i></div><small>团队 ${p.team.map(id=>esc(staffById(id)?.name||'?')).join('、')} · 默契 ${p.synergy} · 成本 ${money(p.finance.total)}</small><div class="qbars">${bars}</div>${log}<div class="btns">${btns}</div></div>`;
+}
+function gameHtml(g){
+  let active=S.sales.find(x=>x.gameId===g.id),week=active?.weekIndex??g.salesWeek??0,total=active?.weights.length??g.salesWeeks??0,progress=total?Math.min(100,Math.round(week/total*100)):100,back=g.finance.total?Math.round(g.netRevenue/g.finance.total*100):0,last=g.lastWeekUnits?`上周 +${g.lastWeekUnits.toLocaleString()} 份 · +${money(g.lastWeekNet)}`:'等待首周结算';
+  return`<div class="record"><div class="split"><b class="grow">《${esc(g.name)}》 <span class="tag gold">${g.total}/40</span>${g.hof?' <span class="tag gold">名人堂</span>':''}${g.awards?.length?` <span class="tag blue">${g.awards.length} 奖</span>`:''}</b><span class="tag">${g.salesStatus||'销售完成'}</span></div><p>${g.genre} · ${g.theme} · ${g.platform} · ${g.release} · ${COMBO_DEF[g.comboTier||comboTier(g.genre,g.theme)].stars}</p><div class="bar"><i style="width:${progress}%"></i></div><p>销售进度 ${week}/${total||week} 周 · ${last}</p><div class="row" style="font-size:12px"><span>销量 <b>${g.units.toLocaleString()}</b></span><span>净收入 <b>${money(g.netRevenue)}</b></span><span>利润 <b>${money(g.profit)}</b></span><span>回本 <b>${back}%</b></span></div><div class="row" style="margin-top:8px"><button onclick="showSalesReport(${g.id})">销售报告</button><button onclick="showReviewAgain(${g.id})">评测</button><button onclick="openPostOps(${g.id})">运营</button></div></div>`;
+}
+function showReviewAgain(id){let g=gameById(id);if(g)showReview(g,{known:true})}
+
+/* ---------- 总览 ---------- */
+function renderHome(){
+  let ps=S.projects,fac=Object.entries(S.facilities).filter(x=>x[1]).map(([k,v])=>`${FACILITIES[k][0]} Lv.${v}`).join(' · ')||'暂未购置设施',main=primaryProject(),scene=main?`主项目《${main.name}》· ${main.stage==='debug'?'调试与打磨':main.paused?'项目暂停':main.phases[main.phase]}`:'自主学习日',goal=S.annualGoal?`${S.annualGoal[1]} · ${goalProgress(S.annualGoal)}/${S.annualGoal[2]}`:'尚未制定',recent=S.games.slice(0,2);
+  byId('page-home').innerHTML=`<section class="home"><section class="card office-card"><div class="office-head"><div><b>${officeDef().name}</b><br><small>点击员工查看档案 · ${S.staff.length}/${officeDef().cap} 人</small></div><span class="tag">${S.brand}</span></div><canvas id="officeCanvas" width="480" height="280" aria-label="办公室场景"></canvas><div class="scene-note"><b>${esc(scene)}</b> · 员工每周的贡献会飘出来，四项品质在项目卡上实时增长。</div></section>
+  <aside class="dash"><section class="card panel"><h3>关键经营数据</h3><div class="mini"><div>资金<b>${money(S.money)}</b></div><div>名气<b>${S.fame.toFixed(1)}</b></div><div>粉丝<b>${S.fans.toLocaleString()}</b></div><div>研发点<b>${S.rp}</b></div><div>项目<b>${ps.length}/${capacity()}</b></div><div>公司<b>Lv.${S.level}</b></div></div></section>
+  <section class="card panel"><h3>经营操作</h3><div class="ops"><button class="orange" onclick="openProject()">立项</button><button onclick="openOutsource()">外包</button><button onclick="openRecruit()">招聘</button><button onclick="openFacilities()">设施</button><button onclick="chooseAnnualGoal()">年度目标</button><button onclick="page('research')">投资研发</button></div><div class="profile-line" style="margin-top:8px">年度目标：${goal}<br>设施：${fac}${S.outsource?`<br>外包：${JOBS.find(j=>j.id===S.outsource.id).name} · 剩余 ${S.outsource.weeksLeft} 周`:''}${S.loans.length?`<br>贷款：${S.loans.map(l=>`${money(l.repay)}（${l.weeks} 周后）`).join('、')}`:''}</div></section></aside></section>
+  <section class="card section"><div class="split"><h2 class="grow">开发项目 <span class="tag">${ps.length}/${capacity()}</span></h2><button class="orange" onclick="openProject()">＋ 立项</button></div>${ps.length?ps.map(p=>projectCard(p,true)).join(''):'<div class="empty">没有开发项目。现在可以立项新作，或研究市场风向。</div>'}</section>
+  ${recent.length?`<section class="card section"><h2>最近发行</h2>${recent.map(gameHtml).join('')}</section>`:''}`;
+  drawOffice();bindOfficeClick();
+}
+
+/* ---------- 团队 ---------- */
+function renderTeam(){
+  byId('page-team').innerHTML=statHtml()+`<section class="card section"><div class="split"><h2 class="grow">公司成员</h2><button onclick="openFacilities()">设施</button><button class="primary" onclick="openRecruit()">＋ 招聘</button></div>${S.staff.map(e=>{let st=e.status?.kind==='project'?`项目组：${esc(projectById(e.status.projectId)?.name||'开发中')}`:e.status?.kind==='maintenance'?'维护旧作中':e.status?.kind==='outsource'?'外包中':e.status?.kind==='train'?`${DIM_LABEL[e.status.key]}培训中`:e.status?.kind==='rest'?'休息中':'空闲，可投入新团队';
+  return`<div class="person"><div class="avatar" style="background:${e.color}">${ROLES[e.role][1]}</div><main><h3>${esc(e.name)} <span class="tag">${ROLES[e.role][0]} Lv.${e.lvl}</span>${e.specialty?` <span class="tag blue">${e.specialty}</span>`:''}${e.lvl>=3&&!e.specialty?' <span class="tag gold">可选方向</span>':''}</h3><p>${esc(e.trait)} · 偏好 ${esc(e.preference)} · ${e.goalDone?'目标已完成':`目标：${esc(e.goal)}`}</p><div class="energy"><i style="width:${e.energy}%"></i></div><p>体力 ${e.energy} · 创作状态 ${e.creativity} · ${st}</p><div class="statline">${DIMS.map(k=>`<span>${DIM_LABEL[k]} <b>${e.stats[k]}</b></span>`).join('')}</div></main><aside>月薪 ${money(e.salary)}<br><button onclick="openPerson(${e.id})">档案 / 安排</button></aside></div>`}).join('')}</section>
+  <section class="card section"><div class="split"><div class="grow"><h2>办公室</h2><p class="profile-line">现址：${officeDef().name} · 容量 ${officeDef().cap} 人 · 月租 ${money(officeDef().rent)}</p></div>${OFFICES[S.office+1]?`<button class="primary" onclick="moveOffice()">搬入 ${OFFICES[S.office+1].name}<br><small>${money(OFFICES[S.office+1].cost)} · 需公司 Lv.${OFFICES[S.office+1].need}</small></button>`:'<span class="tag gold">顶级总部</span>'}</div></section>`;
+}
+
+/* ---------- 市场 ---------- */
+function renderMarket(){
+  ensurePlatforms();let rank=rankings(),max=Math.max(1,...rank.map(r=>r.income)),active=S.sales.map(x=>gameById(x.gameId)).filter(Boolean),shown=S.platforms.filter(x=>{let p=platform(x.n);return p.available||String(p.stage).includes('年后')}).slice(-10),intel=S.investments.intelligence;
+  byId('page-market').innerHTML=statHtml()+`<section class="card section"><h2>市场风向</h2><div class="two"><div class="hint"><b>当前趋势：${S.trend.name}${trendLabel(S.trend.category)}</b><br>${S.trend.stage} · 剩余约 ${S.trend.weeks} 周。趋势匹配的作品评分与销量都会提高。</div><div class="hint"><b>公司品牌：${S.brand}</b><br>长期作品会积累专属受众。</div></div><h3>公司受众</h3>${AUDIENCES.map(x=>`<div class="hbar"><span>${x}</span><div><i style="width:${Math.min(100,(S.audiences[x]||0)/5)}%"></i></div><b>${S.audiences[x]||0}</b></div>`).join('')}</section>
+  <section class="card section"><h2>平台世代</h2>${shown.map(x=>{let p=platform(x.n);return`<div class="rank"><b>${p.n}</b><span>${p.stage} · 偏好 ${p.genre} · 授权 ${money(p.fee)} · 分成 ${Math.round(p.share*100)}%</span><span>${p.users} 万</span></div>`}).join('')}</section>
+  <section class="card section"><h2>${S.year} 年行业收入榜</h2>${rank.map((r,i)=>`<div class="hbar ${r.me?'me':''}"><span>#${i+1} ${esc(r.name)}</span><div><i style="width:${Math.max(2,Math.round(r.income/max*100))}%"></i></div><b>${money(r.income)}</b></div>`).join('')}<p class="hint">同类型强敌最高会分流约 38% 的潜在销量，市场情报部（研发页）可减轻压力${intel?'并已揭示竞争公司真实水平':''}。</p><div class="portfolio">${S.rivals.map(r=>`<div class="record"><b>${esc(r.name)}</b> <span class="tag">${r.style}</span><p>专长 ${r.specialties.join(' / ')} · 奖杯 ${r.awards}${intel?`<br>制作 ${r.quality.toFixed(1)} · 实力 ×${r.power.toFixed(2)} · 技术 Lv.${r.tech}<br>最近年度收入 ${money(r.income)} · 利润 ${money(r.profit)}`:'<br>投资市场情报部可查看详细数据'}</p></div>`).join('')}</div></section>
+  <section class="card section"><h2>销售追踪</h2>${active.length?active.map(gameHtml).join(''):'<div class="empty">当前没有作品在售。</div>'}</section>`;
+}
+
+/* ---------- 作品 ---------- */
+function renderWorks(){
+  let years=Object.keys(S.finYears).sort().slice(-10),hof=S.hallOfFame.map(gameById).filter(Boolean);
+  byId('page-works').innerHTML=statHtml()+`<section class="card section"><h2>名人堂 <span class="tag gold">${hof.length} 款</span></h2>${hof.length?hof.map(g=>`<div class="record"><b>《${esc(g.name)}》</b> <span class="tag gold">${g.total}/40</span> <span class="muted">${g.genre} · ${g.theme} · ${g.release}${g.awards?.length?' · '+g.awards.join('、'):''}</span></div>`).join(''):`<div class="empty">评测总分达到 ${HOF_THRESHOLD}/40 的作品会被永久收录。</div>`}</section>
+  <section class="card section"><h2>IP 与续作</h2>${S.ips.length?`<div class="portfolio">${S.ips.map(ip=>{let canReboot=ip.entries>=1&&S.year-ip.lastYear>=3&&!ip.rebootPlanned,lic=ip.recognition>=100&&ip.entries>=2;return`<div class="record"><b>${esc(ip.name)}</b> <span class="tag">${ip.genre} · ${ip.theme}</span>${lic?' <span class="tag green">授权中</span>':''}${ip.rebootPlanned?' <span class="tag gold">重启企划</span>':''}<p>系列 ${ip.entries} 部 · 最高 ${ip.bestScore.toFixed(1)} 分 · 累计销量 ${ip.totalUnits.toLocaleString()}<br>认知 ${ip.recognition} · 续作期待 ${ip.expectation} · 好感 ${ip.goodwill} · 新鲜度 ${Math.round(ip.freshness)}<br>${ip.freshness<55?'系列出现审美疲劳，续作首发会打折。':ip.freshness>100?'怀旧热度加成生效中。':'系列状态健康。'}${lic?` 每月授权收入约 ${money(Math.min(45000,4000+Math.round(ip.recognition*40)))}。`:' 认知达 100 且满 2 部后产生授权收入。'}</p><div class="row"><button class="primary" onclick="startSequel('${ip.id}')">制作续作</button>${canReboot?`<button onclick="planReboot('${ip.id}')">重启企划</button>`:''}</div></div>`}).join('')}</div>`:'<div class="empty">第一款原创游戏发行后会在这里形成 IP。</div>'}</section>
+  <section class="card section"><h2>全部作品 <span class="tag">${S.games.length}</span></h2>${S.games.length?S.games.map(gameHtml).join(''):'<div class="empty">发行后的作品会留下销量、评测和运营记录。</div>'}</section>
+  <section class="card section"><h2>年度财务与奖项</h2>${years.length?`<canvas id="finCanvas" class="chart" width="680" height="230"></canvas><p class="legend">绿色 · 游戏与授权收入 ｜ 蓝色 · 年度资金净变动（红色为净流出）</p>`:'<div class="empty">经营一段时间后会生成财务图表。</div>'}${S.awardHistory.slice(-6).reverse().map(x=>`<div class="record"><b>${x.year} 年金像素奖</b> <span class="muted">公司获得 ${x.playerWins} 项 · ${x.categories.filter(c=>c.isPlayer).map(c=>c.name).join('、')||'未获奖'}</span><p>${x.categories.map(c=>`${c.name}：《${esc(c.winner)}》${c.isPlayer?'★':''}`).join(' · ')}</p></div>`).join('')}${Object.keys(S.yearRecords).sort().reverse().slice(0,5).map(y=>`<p class="muted" style="font-size:12px">${esc(S.yearRecords[y])}</p>`).join('')}</section>`;
+  if(years.length)drawFinChart(years);
+}
+
+/* ---------- 研发 ---------- */
+function renderResearch(){
+  let gs=GENRES.filter(x=>!S.unlocked.genres.includes(x)),ts=THEMES.filter(x=>!S.unlocked.themes.includes(x)),rows=(a,k)=>a.length?a.map((x,i)=>`<div class="record split"><span class="grow">${x}</span><button ${S.rp<7+i*2?'disabled':''} onclick="unlock('${k}','${x}',${7+i*2})">解锁 ${7+i*2} 点</button></div>`).join(''):'<div class="empty">已解锁全部方向。</div>',c=S.corporate;
+  byId('page-research').innerHTML=statHtml()+`<section class="card section"><h2>研发室 <span class="tag">可用 ${S.rp} 研发点</span></h2><div class="two"><div><h3>新游戏类型</h3>${rows(gs,'genres')}</div><div><h3>新游戏题材</h3>${rows(ts,'themes')}</div></div><h3 style="margin-top:12px">长期研发</h3><div class="portfolio">${RESEARCH_UP.map(([id,name,desc])=>{let lv=S.researchUpgrades[id],cost=12+lv*8;return`<div class="record"><h3>${name} <span class="tag">Lv.${lv}/5</span></h3><p>${desc}</p><button ${lv>=5||S.rp<cost?'disabled':''} onclick="researchUpgrade('${id}')">${lv>=5?'已满级':`投入 ${cost} 点`}</button></div>`}).join('')}</div></section>
+  <section class="card section"><h2>公司投资</h2><p class="hint">中后期资金可以转化为制作能力、销售渠道、团队状态和竞争情报。过度投入会压缩下一款作品的现金流。</p>${Object.entries(INVESTMENTS).map(([id,d])=>{let lv=S.investments[id],cost=investmentCost(id);return`<div class="inv-row"><div><h3>${d.name} <span class="tag">Lv.${lv}/${d.max}</span></h3><p>${d.desc}</p></div><button ${lv>=d.max||S.money<cost?'disabled':''} onclick="buyInvestment('${id}')">${lv>=d.max?'已完成':`投入 ${money(cost)}`}</button></div>`}).join('')}
+  <h3 style="margin-top:12px">一次性经营行动</h3><div class="inv-row"><div><h3>团队季度奖金</h3><p>恢复全员体力与创作状态${c.bonusCooldown?`，冷却 ${c.bonusCooldown} 周`:''}。</p></div><button ${c.bonusCooldown||S.money<90000?'disabled':''} onclick="teamBonus()">发放 ${money(90000)}</button></div><div class="inv-row"><div><h3>品牌发行战役</h3><p>下一款作品销售触达 +18%，本年度评奖声量上升${c.campaignCooldown?`，冷却 ${c.campaignCooldown} 周`:''}。</p></div><button ${c.campaignCooldown||S.money<160000?'disabled':''} onclick="brandCampaign()">启动 ${money(160000)}</button></div></section>`;
+}
+
+/* ---------- 图鉴 ---------- */
+function renderCodex(){
+  let known=Object.keys(S.combos).length,total=GENRES.length*THEMES.length;
+  let table=`<table><tr><th></th>${THEMES.map(t=>`<th>${t}${S.unlocked.themes.includes(t)?'':'<small>未解锁</small>'}</th>`).join('')}</tr>${GENRES.map(g=>`<tr><th>${g}${S.unlocked.genres.includes(g)?'':'<small>未解锁</small>'}</th>${THEMES.map(t=>{let r=S.combos[comboKey(g,t)];if(!r)return`<td title="尚未验证">？</td>`;let d=COMBO_DEF[r.tier];return`<td class="${d.cls}" title="${d.label}"><span class="stars ${d.cls==='c'?'bad':''}">${d.stars}</span><small>${r.tried?`${r.tried} 次 · 最佳 ${r.best.toFixed(1)}`:'调研得知'}</small></td>`}).join('')}</tr>`).join('')}</table>`;
+  let mrow=(kind,list)=>list.map(n=>{let xp=S.mastery[kind][n]||0,lv=masteryLevel(kind,n),next=MASTERY_XP[lv],w=next?Math.min(100,xp/next*100):100;return`<div><b>${n}</b> <span class="tag">Lv.${lv}</span> <span class="muted">${next?`${xp}/${next}`:'满级'}</span><i style="--w:${w}%"></i></div>`}).join('');
+  byId('page-codex').innerHTML=statHtml()+`<section class="card section"><div class="split"><div class="grow"><h2>组合图鉴 <span class="tag">${known}/${total} 已验证</span></h2><p class="muted" style="font-size:12px;margin:0">类型 × 题材的契合度在立项时未知，发行后揭晓。★★★ 神组合评分与销量都有加成，✕ 不搭则相反。</p></div><button ${S.rp<6?'disabled':''} onclick="surveyCombo()">委托调研 · 6 研发点</button></div><div class="codex">${table}</div></section>
+  <section class="card section"><h2>熟练度</h2><p class="muted" style="font-size:12px">发行作品会积累类型与题材熟练度（小型 +1、普通 +2、大型 +3）。类型每级品质产出 +3%、评分 +0.08；题材每级品质产出 +1.5%、评分 +0.08。</p><h3>类型</h3><div class="mastery">${mrow('genre',GENRES)}</div><h3 style="margin-top:10px">题材</h3><div class="mastery">${mrow('theme',THEMES)}</div></section>
+  <section class="card section"><h2>评论家</h2>${CRITICS.map(c=>`<div class="record"><b>${c.ico} ${c.name}</b> <span class="muted">${c.desc} · 看重 ${c.focus.map(k=>DIM_LABEL[k]).join('、')}</span></div>`).join('')}</section>`;
+}
+
+/* ---------- 销售报告 ---------- */
+function showSalesReport(id){
+  let g=gameById(id);if(!g)return;let m=g.mechanics||{},combo=COMBO_DEF[g.comboTier||comboTier(g.genre,g.theme)];
+  openDlg('销售报告',`<div class="reporthero"><small>《${esc(g.name)}》销售进度报告 · ${g.salesStatus||'销售完成'} · 第 ${g.salesWeek||0}/${g.salesWeeks||0} 周</small><h1>${esc(g.name)}</h1><div class="score">${g.total}<small style="font-size:14px"> / 40</small></div><p>${g.genre} · ${g.theme} · ${g.platform} · ${g.release}${g.awards?.length?` · ${g.awards.join('、')}`:''}</p></div>
+  <div class="reportgrid"><div>累计销量<b>${g.units.toLocaleString()}</b></div><div>累计净收入<b>${money(g.netRevenue)}</b></div><div>利润<b>${money(g.profit)}</b></div><div>总成本<b>${money(g.finance.total)}</b></div><div>单价<b>¥${g.price}</b></div><div>组合契合<b>${combo.stars} ${combo.label}</b></div></div>
+  ${g.reviews.map(r=>`<div class="quote"><b>${CRITICS.find(c=>c.id===r.id)?.name}</b> ${r.score} 分 · ${esc(r.quote)}</div>`).join('')}
+  ${m.userFactor?`<div class="hint"><b>销量形成</b><br>平台规模 ×${m.userFactor.toFixed(2)} · 既有受众 ×${m.audienceBoost.toFixed(2)} · 粉丝 ×${m.fanBoost.toFixed(2)} · 营销 ×${m.marketingBoost.toFixed(2)} · 发行触达 ×${m.publisherReach.toFixed(2)}<br>竞品压力 ×${m.rivalPressure.toFixed(2)} · 规模需求 ×${m.sizeDemand.toFixed(2)} · 社区 ×${(m.communityBoost||1).toFixed(2)}${m.freshness&&m.freshness!==1?` · IP 新鲜度 ×${m.freshness.toFixed(2)}`:''} · 技术适配 ${Math.round(m.readiness*100)}%</div>`:''}
+  ${g.salesHistory.length?`<h3 style="margin-top:12px">周销售曲线</h3><canvas id="salesCanvas" class="chart" width="680" height="220"></canvas><p class="legend">绿线 · 周净收入 ｜ ▲ 发售 / 推广节点</p>`:''}`,'<button class="primary" onclick="closeDlg()">关闭报告</button>',{wide:true});
+  if(g.salesHistory.length)drawSalesCurve(g);
+}
+function drawSalesCurve(g){
+  let cv=byId('salesCanvas');if(!cv)return;let x=cv.getContext('2d'),W=cv.width,H=cv.height,hist=g.salesHistory,max=Math.max(1,...hist.map(h=>h.n)),pad=42;
+  x.clearRect(0,0,W,H);x.fillStyle='#fffaf0';x.fillRect(0,0,W,H);x.font='10px sans-serif';
+  for(let i=0;i<=3;i++){let y=H-26-(H-56)*i/3;x.strokeStyle='#e4d7ba';x.beginPath();x.moveTo(pad,y);x.lineTo(W-8,y);x.stroke();x.fillStyle='#8a7a58';x.fillText(fmtW(max*i/3),4,y+3)}
+  let bw=(W-pad-12)/Math.max(1,hist.length),px=i=>pad+bw*i+bw/2,py=n=>H-26-(H-56)*(n/max);
+  x.beginPath();x.strokeStyle='#3f9e7c';x.lineWidth=2;hist.forEach((h,i)=>{i?x.lineTo(px(i),py(h.n)):x.moveTo(px(i),py(h.n))});x.stroke();
+  hist.forEach((h,i)=>{x.fillStyle='#3f9e7c';x.beginPath();x.arc(px(i),py(h.n),2.5,0,7);x.fill();if(h.t){let cx=px(i),cy=py(h.n);x.fillStyle='#d6772e';x.beginPath();x.moveTo(cx,cy-15);x.lineTo(cx-5,cy-6);x.lineTo(cx+5,cy-6);x.closePath();x.fill();x.fillText(h.t,cx-10,cy-19)}});
+  x.fillStyle='#8a7a58';let step=Math.max(1,Math.round(hist.length/8));hist.forEach((h,i)=>{if(i%step)return;x.fillText(`${h.y}.${h.m}`,px(i)-14,H-8)});
+}
+function drawFinChart(years){
+  let cv=byId('finCanvas');if(!cv)return;let x=cv.getContext('2d'),W=cv.width,H=cv.height,data=years.map(y=>({y,inc:S.finYears[y].income||0,net:S.finYears[y].net||0})),maxV=Math.max(1,...data.map(d=>Math.max(d.inc,d.net,0))),minV=Math.min(0,...data.map(d=>Math.min(d.net,0))),range=maxV-minV||1,pad=48,top=14,bottom=26,plotH=H-top-bottom,zeroY=top+plotH*(maxV/range);
+  x.clearRect(0,0,W,H);x.fillStyle='#fffaf0';x.fillRect(0,0,W,H);x.font='10px sans-serif';
+  [maxV,0,minV].forEach(v=>{let y=top+plotH*((maxV-v)/range);x.strokeStyle=v===0?'#c9b78d':'#e4d7ba';x.beginPath();x.moveTo(pad,y);x.lineTo(W-8,y);x.stroke();x.fillStyle='#8a7a58';x.fillText(fmtW(v),4,y+3)});
+  let gw=(W-pad-12)/data.length;data.forEach((d,i)=>{let cx=pad+gw*i,ih=plotH*(d.inc/range);x.fillStyle='#3f9e7c';x.fillRect(cx+gw*.14,zeroY-ih,gw*.3,Math.max(1,ih));let nh=plotH*(Math.abs(d.net)/range);x.fillStyle=d.net>=0?'#315d8e':'#c0563f';x.fillRect(cx+gw*.52,d.net>=0?zeroY-nh:zeroY,gw*.3,Math.max(1,nh));x.fillStyle='#8a7a58';x.fillText(d.y,cx+gw*.24,H-8)});
+}
+
+/* ---------- 办公室像素场景 ---------- */
+const SLOTS={desks:[[92,153],[171,153],[251,153],[330,153],[92,220],[171,220],[251,220],[330,220],[410,153],[410,220],[52,120],[132,120],[212,120],[292,120],[372,120],[452,120],[52,250],[452,250]],white:[61,82],sofa:[51,239],coffee:[421,50]};
+let sceneStarted=false;
+function employeePos(e,i,t){let p=SLOTS.desks[i%SLOTS.desks.length],b=Math.round(Math.sin(t+i));if(e.status?.kind==='rest')return{x:SLOTS.sofa[0]+(i%3)*18+b,y:SLOTS.sofa[1]-(i%2)*14};if(!e.status){let q=[SLOTS.white,SLOTS.coffee,SLOTS.sofa,...SLOTS.desks.slice(0,8)][i%11];return{x:q[0]+(i%3)*14+b,y:q[1]+Math.floor(i/3)*10}}return{x:p[0]+b,y:p[1]}}
+function drawRoom(x,lvl){
+  x.fillStyle='#ad8c63';x.fillRect(12,112,456,156);for(let y=116;y<268;y+=18){x.fillStyle=y%36?'#e8d4aa':'#ddc79c';x.fillRect(14,y,452,16)}
+  x.fillStyle='#273a5f';x.fillRect(332,26,116,66);x.fillStyle='#6bb8d1';x.fillRect(338,32,104,54);x.fillStyle='#f2a65d';x.fillRect(338,68,104,18);x.fillStyle='#fff1b8';x.fillRect(338,62,104,6);x.fillStyle='#22304e';x.fillRect(388,32,4,54);
+  x.fillStyle='#f7f0da';x.fillRect(24,28,84,52);x.fillStyle='#557aa8';x.fillRect(29,33,74,42);x.fillStyle='#f3ca65';x.fillRect(38,42,18,13);x.fillStyle='#e67a73';x.fillRect(65,51,28,5);x.fillRect(65,62,20,4);
+  let deskCount=Math.min(SLOTS.desks.length,[4,7,11,18][lvl]);
+  SLOTS.desks.slice(0,deskCount).forEach((p,i)=>{x.fillStyle='#6e4f3c';x.fillRect(p[0]-25,p[1]-8,51,9);x.fillStyle='#45384a';x.fillRect(p[0]-20,p[1]+1,5,18);x.fillRect(p[0]+18,p[1]+1,5,18);x.fillStyle='#263957';x.fillRect(p[0]-10,p[1]-25,22,15);x.fillStyle=['#78d1da','#84d6a4','#d68ec4'][i%3];x.fillRect(p[0]-7,p[1]-22,16,9);x.fillStyle='#d6b579';x.fillRect(p[0]+15,p[1]-13,7,6)});
+  x.fillStyle='#5d8e73';x.fillRect(438,89,7,28);x.fillStyle='#3f765a';x.fillRect(426,78,15,14);x.fillRect(441,73,17,18);x.fillStyle='#b76b4d';x.fillRect(429,115,25,12);
+  if(lvl>=1){x.fillStyle='#e77685';x.fillRect(275,45,37,31);x.fillStyle='#f6d27b';x.fillRect(281,51,25,19)}if(lvl>=2){x.fillStyle='#7f69b4';x.fillRect(119,42,44,31)}if(lvl>=3){x.fillStyle='#e9bd55';x.fillRect(204,38,54,12)}
+  Object.entries(S.facilities).forEach(([id,lv],i)=>{if(!lv)return;let p=[[135,100],[294,99],[390,223],[64,100],[429,136],[58,236]][i];x.fillStyle=['#486f9c','#d66f8b','#d19b4d','#5ca38e','#684c3e','#b96555'][i];x.fillRect(p[0],p[1],12+lv*3,10+lv*2);x.fillStyle='#ffe49b';x.fillRect(p[0]+3,p[1]+3,4,3)});
+  /* 奖杯柜 */
+  let trophies=S.games.reduce((a,g)=>a+(g.awards?.length||0),0)+S.hallOfFame.length;if(trophies){x.fillStyle='#5a4632';x.fillRect(150,60,60,32);for(let i=0;i<Math.min(6,trophies);i++){x.fillStyle=i<S.hallOfFame.length?'#ffd76a':'#e0b04a';x.fillRect(154+i*9,66,6,10)}}
+}
+function drawEmployee(x,e,px,py,t){
+  let tired=e.energy<35,walk=Math.round(Math.sin(t*2+px)),color=e.color||ROLE_COLOR[e.role];
+  x.fillStyle='#253048';x.fillRect(px-6,py+5+walk,5,9);x.fillRect(px+2,py+5-walk,5,9);x.fillStyle='#1b2438';x.fillRect(px-7,py+13+walk,6,3);x.fillRect(px+2,py+13-walk,6,3);
+  x.fillStyle=color;x.fillRect(px-8,py-8,17,14);x.fillStyle='#f0b98e';x.fillRect(px-6,py-18,13,11);x.fillStyle='#3c2e36';x.fillRect(px-7,py-20,15,5);x.fillRect(px-7,py-17,3,4);x.fillStyle='#273044';x.fillRect(px-3,py-14,2,2);x.fillRect(px+3,py-14,2,2);
+  if(tired){x.fillStyle='#6d5b79';x.fillRect(px-9,py-10,19,4)}
+  if(e.status?.kind==='project'){x.fillStyle='#fff0a3';x.fillRect(px+11,py-8,7,7);x.fillStyle='#865b34';x.fillRect(px+13,py-6,3,3)}
+  if(e.status?.kind==='maintenance'){x.fillStyle='#e75e68';x.fillRect(px+11,py-8,8,8);x.fillStyle='#fff';x.fillRect(px+14,py-6,2,4)}
+  if(e.status?.kind==='train'){x.fillStyle='#8fd0ff';x.fillRect(px+11,py-10,8,10);x.fillStyle='#2b4d78';x.fillRect(px+13,py-8,4,1);x.fillRect(px+13,py-5,4,1)}
+  if(e.status?.kind==='outsource'){x.fillStyle='#d6a94b';x.fillRect(px+11,py-8,8,8);x.fillStyle='#3a2a08';x.fillText('¥',px+12,py-1)}
+  if(e.energy<15){x.fillStyle='#e85e6b';x.fillRect(px-10,py-27,20,4)}
+  x.save();x.font='bold 9px "PingFang SC",sans-serif';x.textAlign='center';x.fillStyle='#17243a';x.fillRect(px-18,py-31,36,11);x.fillStyle='#fff7d7';x.fillText(e.name.slice(0,4),px,py-23);x.restore();
+}
+function drawOffice(){
+  let c=byId('officeCanvas');if(!c||!S)return;let x=c.getContext('2d'),W=480,H=280,lvl=S.office,t=performance.now()/170,now=performance.now();
+  x.imageSmoothingEnabled=false;x.clearRect(0,0,W,H);x.fillStyle=['#d8c69e','#c8dbd8','#c9d5e1','#192845'][lvl];x.fillRect(0,0,W,H);x.fillStyle=lvl===3?'#253861':'#f6e9c8';x.fillRect(12,16,W-24,H-28);x.fillStyle='#b99d72';for(let i=18;i<W-20;i+=24)x.fillRect(i,15,2,H-26);for(let j=18;j<H-16;j+=22)x.fillRect(13,j,W-26,2);
+  drawRoom(x,lvl);
+  S.staff.slice(0,officeDef().cap).forEach((e,i)=>{let pos=employeePos(e,i,t);drawEmployee(x,e,pos.x,pos.y,t)});
+  let main=primaryProject();
+  if(main?.stage==='debug'){x.fillStyle='#e64b52';x.fillRect(218,34,44,16);x.fillStyle='#fff';x.fillRect(238,37,4,9);x.fillRect(238,48,4,3)}
+  else if(main?.sceneEvent==='idea'){x.fillStyle='#ffe066';x.fillRect(232,42,11,12);x.fillRect(230,46,15,5);x.fillStyle='#f49b42';x.fillRect(234,54,7,3)}
+  if(!main){x.fillStyle='#29466f';x.fillRect(161,42,155,19);x.fillStyle='#fff';x.font='10px sans-serif';x.fillText('没有项目 · 自主学习日',177,55)}
+  /* 飘字 */
+  for(let i=FX.length-1;i>=0;i--){let f=FX[i],k=(now-f.t0)/f.life;if(k>=1){FX.splice(i,1);continue}
+    x.save();x.globalAlpha=k<.7?1:1-(k-.7)/.3;x.font=`bold ${f.big?12:11}px "PingFang SC",sans-serif`;x.textAlign='center';let y=f.y-k*26;
+    x.lineWidth=3;x.strokeStyle='#1a1d2b';x.strokeText(f.text,f.x,y);x.fillStyle=f.color;x.fillText(f.text,f.x,y);x.restore()}
+}
+function bindOfficeClick(){let c=byId('officeCanvas');if(!c||c.dataset.bound)return;c.dataset.bound='1';c.onclick=ev=>{let r=c.getBoundingClientRect(),px=(ev.clientX-r.left)*480/r.width,py=(ev.clientY-r.top)*280/r.height,closest=null,dist=1e9;S.staff.slice(0,officeDef().cap).forEach((e,i)=>{let p=employeePos(e,i,performance.now()/170),d=(p.x-px)**2+(p.y-py)**2;if(d<dist){dist=d;closest=e}});if(closest&&dist<2800)openPerson(closest.id)}}
+function startScene(){if(sceneStarted)return;sceneStarted=true;let loop=()=>{if(!document.hidden&&S&&activePage==='home'&&(speed>0||FX.length))drawOffice();setTimeout(()=>requestAnimationFrame(loop),FX.length?40:250)};requestAnimationFrame(loop)}
+
+/* ---------- 启动 ---------- */
+document.addEventListener('DOMContentLoaded',()=>{checkContinue();updateSpeedUI()});
+</script>
+</body></html>
