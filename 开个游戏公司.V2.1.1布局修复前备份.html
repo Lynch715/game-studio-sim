@@ -196,36 +196,14 @@ h2,h3{margin:0 0 8px}h2{font-size:16px}h3{font-size:14px}
 .gold-list li{margin:4px 0}
 /* ============ 对话框 ============ */
 html:has(dialog[open]){overflow:hidden}
-dialog{border:0;padding:0;width:min(720px,calc(100% - 24px));max-height:92vh;max-height:92dvh;border-radius:14px;color:var(--ink);box-shadow:0 25px 80px #17243a60;background:var(--card)}
+dialog{border:0;padding:0;width:min(720px,calc(100% - 24px));max-height:88vh;max-height:88dvh;border-radius:14px;color:var(--ink);box-shadow:0 25px 80px #17243a60;background:var(--card)}
 dialog[open]{display:flex;flex-direction:column}
 dialog::backdrop{background:#17243a85;backdrop-filter:blur(3px)}
 .dhead{display:flex;flex:none;justify-content:space-between;align-items:center;gap:10px;padding:15px 18px 12px;border-bottom:2px solid var(--line)}
 .dhead h2{flex:1;min-width:0;font-size:18px;margin:0}.dhead>button{flex:none;min-height:34px;padding:4px 10px}
-.dbody{flex:1;min-height:0;padding:14px 18px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#cbbb93 transparent;background:linear-gradient(var(--card) 32%,#fffaf000),linear-gradient(#fffaf000,var(--card) 68%) 0 100%,radial-gradient(farthest-side at 50% 0,#17243a24,#17243a00),radial-gradient(farthest-side at 50% 100%,#17243a24,#17243a00) 0 100%;background-repeat:no-repeat;background-size:100% 30px,100% 30px,100% 10px,100% 10px;background-attachment:local,local,scroll,scroll}
-.dbody::-webkit-scrollbar{width:9px}.dbody::-webkit-scrollbar-thumb{background:#cbbb93;border-radius:9px;border:2px solid var(--card)}
+.dbody{flex:1;min-height:0;padding:14px 18px;overflow:auto;overscroll-behavior:contain}
 .dfoot{display:flex;flex:none;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding:11px 18px;border-top:2px solid var(--line)}
 dialog.wide{width:min(860px,calc(100% - 24px))}
-/* 窄屏或矮窗：对话框铺满可视区，避免被挤成一条缝 */
-@media(max-width:720px),(max-height:660px){
- dialog,dialog.wide{width:100vw;width:100dvw;max-width:none;max-height:100vh;max-height:100dvh;border-radius:0}
- .dfoot{padding-bottom:calc(11px + env(safe-area-inset-bottom))}
-}
-/* 手机竖屏：改成从底部升起的面板，拇指够得着按钮 */
-@media(max-width:720px){
- dialog,dialog.wide{margin-top:auto;margin-bottom:0;border-radius:16px 16px 0 0}
-}
-/* 又宽又矮（横屏手机 / 半屏窗口）：把表单摊成多列，减少纵向滚动 */
-@media(min-width:700px) and (max-height:560px){
- #projectDialog .form,#projectDialog .picks{grid-template-columns:repeat(3,minmax(0,1fr))}
- .dbody .two{grid-template-columns:repeat(2,minmax(0,1fr))}
- .dbody .actions{display:flex;flex-wrap:wrap}
-}
-/* 矮窗（横屏手机 / 半屏窗口）：压缩头尾，把高度让给正文 */
-@media(max-height:660px){
- .dhead{padding:9px 14px 8px}.dhead h2{font-size:16px}.dhead>button{min-height:32px}
- .dbody{padding:10px 14px}.dfoot{padding:8px 14px}.dfoot button{min-height:38px}
- .dbody h3{margin:10px 0 5px}.dbody .choice{padding:8px;margin:6px 0}
-}
 .toast{position:fixed;z-index:30;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));max-width:calc(100% - 28px);text-align:center;line-height:1.45;transform:translate(-50%,80px);opacity:0;pointer-events:none;background:#17243a;color:#fff;border-radius:99px;padding:10px 16px;box-shadow:0 10px 30px #0004;transition:.25s;font-size:13px}
 .toast.show{transform:translate(-50%,0);opacity:1}
 /* ============ 开始页 ============ */
@@ -262,9 +240,7 @@ dialog.wide{width:min(860px,calc(100% - 24px))}
  .bottomnav button svg.ico{display:block;width:21px;height:21px;margin:0 auto 3px;stroke-width:1.9}
  .toast{bottom:calc(80px + env(safe-area-inset-bottom))}
  .dhead{padding:13px 14px 10px}.dhead>button{min-height:40px;min-width:40px}.dbody{padding:12px 14px}.dfoot{padding:10px 14px calc(10px + env(safe-area-inset-bottom))}.dfoot button{flex:1 1 auto;min-height:44px}
- .form{gap:8px}.field label{margin-bottom:3px}.field input,.field select{padding:8px 9px}
- .picks{gap:5px}.pick{padding:7px 8px}
- #projectDialog .dbody{padding-bottom:6px}
+ dialog.wide{width:100vw;max-width:none;height:100%;max-height:100%;max-height:100dvh;margin:0;border-radius:0}
  .presets button{min-height:36px}.pcard .btns button{min-height:40px}
  .combo-line{flex-direction:column;align-items:flex-start;gap:4px}
  .reportgrid{grid-template-columns:1fr 1fr}.startcard{padding:29px 22px}.startcard h1{font-size:31px}
@@ -359,7 +335,7 @@ dialog.wide{width:min(860px,calc(100% - 24px))}
 <dialog id="dlg"><div class="dhead"><h2 id="dlgTitle"></h2><button id="dlgClose" onclick="closeDlg()">×</button></div><div id="dlgBody" class="dbody"></div><div id="dlgFoot" class="dfoot"></div></dialog>
 
 <!-- 立项 -->
-<dialog id="projectDialog" class="wide"><div class="dhead"><h2 id="projectTitle">立项：做一款新游戏</h2><button onclick="closeProjectDialog()">×</button></div>
+<dialog id="projectDialog"><div class="dhead"><h2 id="projectTitle">立项：做一款新游戏</h2><button onclick="closeProjectDialog()">×</button></div>
 <div class="dbody">
  <div class="form">
   <div class="field"><label>作品名称</label><input id="pname" maxlength="18" placeholder="例如：月面信使"></div>
