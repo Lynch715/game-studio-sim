@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>开个游戏公司 V2.1.1</title>
+<title>开个游戏公司 V2.1.2</title>
 <style>
 /* ============ 基础 ============ */
 :root{--ink:#1d2a3d;--paper:#f5f0e3;--card:#fffaf0;--line:#cfbd98;--blue:#315d8e;--gold:#d6a94b;--aqua:#3f9e7c;--orange:#e07a3f;--pink:#d8607a;--muted:#6f6a5c;--navy:#1c2d4b;
@@ -291,7 +291,7 @@ dialog.wide{width:min(860px,calc(100% - 24px))}
 <g id="i-plus"><path d="M12 5v14M5 12h14"/></g>
 </defs></svg>
 <section id="start" class="start"><main class="startcard">
- <div class="eyebrow">游戏公司经营模拟 · V2.1.1</div>
+ <div class="eyebrow">游戏公司经营模拟 · V2.1.2</div>
  <h1>开个游戏公司</h1>
  <p>从三个人和一间小办公室开始：立项、分配开发方向、看着四项品质一点点长起来，等评测杂志出分，再把口碑变成下一款作品的资本。</p>
  <p id="legacyLine" class="legacy hidden"></p>
@@ -687,23 +687,33 @@ let dlgCancel=null;
 function openDlg(title,body,foot='',opt={}){
   let d=byId('dlg');byId('dlgTitle').textContent=title;byId('dlgBody').innerHTML=body;byId('dlgFoot').innerHTML=foot||'<button onclick="closeDlg()">关闭</button>';
   byId('dlgClose').classList.toggle('hidden',!!opt.noClose);dlgCancel=opt.onCancel||null;d.classList.toggle('wide',!!opt.wide);
-  pauseForModal();if(!d.open)d.showModal();byId('dlgBody').scrollTop=0;
+  pauseForModal();if(!d.open)d.showModal();else fitDialogHeight(d);byId('dlgBody').scrollTop=0;
+}
+/* 对话框高度自己量，不依赖浏览器对 fit-content + flex 的推断
+   （WebKit / Safari / 微信内嵌浏览器会把 flex-basis:0 的正文算成 0 高，弹窗塌成一条缝） */
+function measureDialog(d){
+  let b=d.querySelector('.dbody');if(!b)return null;
+  let vh=Math.max(document.documentElement.clientHeight||0,window.innerHeight||0);if(!vh)return null;
+  let full=window.innerWidth<=720||vh<=660,cap=Math.round(vh*(full?1:.92));
+  let chrome=Math.max(0,Math.round(d.getBoundingClientRect().height-b.getBoundingClientRect().height));
+  return Math.min(Math.ceil(chrome+b.scrollHeight),cap);
 }
 function fitDialogHeight(d){
-  if(!d||!d.open)return;let b=d.querySelector('.dbody');if(!b)return;
+  if(!d||!d.open)return;if(!d.querySelector('.dbody'))return;
   d.style.height='';
-  requestAnimationFrame(()=>{
-    if(!d.open)return;
-    let vh=Math.max(document.documentElement.clientHeight||0,window.innerHeight||0);
-    if(!vh)return;
-    let full=window.innerWidth<=720||vh<=660,squeezed=b.scrollHeight>b.clientHeight+8;
-    if(squeezed&&(full||b.clientHeight<64))d.style.height=Math.round(vh*(full?1:.92))+'px';
-  });
+  let apply=()=>{if(!d.open)return;let h=measureDialog(d);if(h)d.style.height=h+'px'};
+  requestAnimationFrame(apply);setTimeout(apply,160);
 }
-(function(){if(typeof HTMLDialogElement==='undefined'||!HTMLDialogElement.prototype.showModal)return;let sm=HTMLDialogElement.prototype.showModal;HTMLDialogElement.prototype.showModal=function(){sm.call(this);fitDialogHeight(this)};
- let rz=()=>document.querySelectorAll('dialog[open]').forEach(fitDialogHeight);
- addEventListener('resize',rz);addEventListener('orientationchange',rz)})();
-function closeDlg(){let d=byId('dlg');if(d.open){d.close();d.style.height=''}dlgCancel=null;resumeAfterModal();if(S)render()}
+function refitDialogs(){document.querySelectorAll('dialog[open]').forEach(fitDialogHeight)}
+(function(){
+  if(typeof HTMLDialogElement==='undefined'||!HTMLDialogElement.prototype.showModal)return;
+  let sm=HTMLDialogElement.prototype.showModal;
+  HTMLDialogElement.prototype.showModal=function(){sm.call(this);fitDialogHeight(this)};
+  let cl=HTMLDialogElement.prototype.close;
+  HTMLDialogElement.prototype.close=function(v){this.style.height='';return cl.call(this,v)};
+  addEventListener('resize',refitDialogs);addEventListener('orientationchange',refitDialogs);
+})();
+function closeDlg(){let d=byId('dlg');if(d.open)d.close();dlgCancel=null;resumeAfterModal();if(S)render()}
 function openHelp(){openDlg('经营说明',`<p>1× 速度下每 5 秒推进一周，暂停时不会产生进度、收入或恢复；打开面板会自动暂停，关闭后回到原速度。</p><p><b>立项</b>：选类型、题材、平台，并把 ${DIR_POINTS} 点开发方向分配到程序 / 画面 / 音乐 / 创意。每种类型看重的维度不同，分配对了，评论家会给出更高分。</p><p><b>开发</b>：项目卡上四项品质实时增长，办公室里会飘出员工每周的贡献。阶段切换时会有三选一的方向抉择；开发完成后进入调试，可修 Bug、打磨或直接发行。</p><p><b>评测</b>：发行后四位评论家各打 1—10 分，总分满 40。总分达到 ${HOF_THRESHOLD} 分的作品进入名人堂。类型 × 题材的契合度在立项时是未知的，发行后才会揭晓并记入图鉴；同一类型做得越多，熟练度越高。</p><p><b>经营</b>：工资每周结算，房租和运营费每月结算。外包能救急但会消耗创作状态；名气每年衰减 5%；粉丝提高销量触达。平台会更迭，竞争公司会真实发行作品、争夺年度金像素奖，也会来挖角。</p><p>2038 年董事会做十年评估，可继续经营，或带着传承经验重新创业。</p>`,'<button class="primary" onclick="closeDlg()">明白了</button>')}
 document.addEventListener('keydown',ev=>{if(ev.key!=='Escape')return;let d=[...document.querySelectorAll('dialog[open]')].pop();if(!d)return;ev.preventDefault();ev.stopPropagation();safeClose(d)},true);
 document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('dialog').forEach(d=>d.addEventListener('cancel',ev=>{ev.preventDefault();safeClose(d)}))});
@@ -1065,7 +1075,7 @@ function openProject(ipId=null){
   dirPts={code:2,art:2,music:2,idea:2};
   byId('dirPresets').innerHTML=DIR_PRESETS.map((p,i)=>`<button onclick="applyPreset(${i})">${p[0]}</button>`).join('');
   byId('projectPicks').innerHTML=S.staff.map((e,i)=>{let ok=!e.status,spec=e.specialty?` · ${e.specialty}`:'';return`<label class="pick ${ok?'':'dim'}"><input type="checkbox" value="${e.id}" ${ok&&i<3?'checked':''} ${ok?'':'disabled'} onchange="previewProject()"><span>${esc(e.name)}<small>${ROLES[e.role][0]} Lv.${e.lvl} · 体力 ${e.energy} · ${esc(e.trait)}${esc(spec)}</small></span></label>`}).join('');
-  previewProject();pauseForModal();let d=byId('projectDialog');if(!d.open)d.showModal();d.querySelector('.dbody').scrollTop=0;
+  pauseForModal();let d=byId('projectDialog');if(!d.open)d.showModal();previewProject();d.querySelector('.dbody').scrollTop=0;
 }
 function closeProjectDialog(){let d=byId('projectDialog');if(d.open)d.close();S.nextIp=null;resumeAfterModal();render()}
 function applyPreset(i){dirPts={...DIR_PRESETS[i][1]};previewProject()}
@@ -1082,6 +1092,7 @@ function previewProject(){
   byId('dirBox').innerHTML=DIMS.map(k=>`<div class="${k}"><span>${DIM_LABEL[k]}</span><b>${dirPts[k]}</b><div class="pm"><button onclick="adjDir('${k}',-1)">−</button><button onclick="adjDir('${k}',1)">＋</button></div><small>×${dirMult(dirPts[k]).toFixed(2)}</small><i style="width:${dirPts[k]/DIR_MAX*100}%"></i></div>`).join('');
   byId('dirWeights').innerHTML=`<b>${g}</b> 类型的评论家看重：${DIMS.slice().sort((a,b)=>w[b]-w[a]).map(k=>`<b style="color:${DIM_COLOR[k]}">${DIM_LABEL[k]} ${Math.round(w[k]*100)}%</b>`).join(' · ')}`;
   byId('projectPreview').innerHTML=`<b>预计 ${weeks} 周 · 首期投入 ${money(base)} · 市场需求 ×${size.demand.toFixed(2)}</b><br>团队默契 ${syn} · 平均创作状态 ${Math.round(creative)} · 类型熟练 Lv.${mg} / 题材熟练 Lv.${mt}<br>平台 ${pl.stage} · 用户规模 ×${m.userFactor.toFixed(2)} · 技术适配 ${Math.round(m.readiness*100)}%<br>粉丝触达 ×${fanBoost().toFixed(2)} · 营销触达 ×${marketingBoost(mk).toFixed(2)} · ${byId('ppublisher').value==='星河发行'?'发行商扩大销量，支付 18% 分成':'独立发行利润更高，但依赖自有受众'}`;
+  let d=byId('projectDialog');if(d.open)fitDialogHeight(d);
 }
 function startProject(){
   let ids=[...document.querySelectorAll('#projectPicks input:checked')].map(x=>+x.value);if(ids.length<2||ids.length>3)return toast('请选择 2—3 名可用员工。');
@@ -1170,7 +1181,7 @@ function showReview(g,extra={}){
   ${g.hof?`<div class="hof">★ 殿堂级作品 · 进入名人堂 ★</div>`:''}
   <div class="reveal-combo">${extra.known?`${g.genre} × ${g.theme}：<b>${combo.stars} ${combo.label}</b>（图鉴已记录，最佳 ${S.combos[comboKey(g.genre,g.theme)].best.toFixed(1)} 分）`:`组合揭晓！${g.genre} × ${g.theme} = <b>${combo.stars} ${combo.label}</b>，已记入图鉴。`}${extra.masteryUp?.length?`<br>${extra.masteryUp.join('、')} 提升！`:''}</div></div>
   <div class="hint">评论家各自看重不同维度：老周盯 Bug 与程序，阿灿看市场热度与创意，林墨看画面与音乐，K 偏爱新尝试。总分决定销量倍率；${HOF_THRESHOLD} 分以上进入名人堂。</div>`;
-  pauseForModal();if(!d.open)d.showModal();
+  pauseForModal();if(!d.open)d.showModal();else fitDialogHeight(d);
   g.reviews.forEach((r,i)=>setTimeout(()=>{let el=byId(`crit${i}`);if(el)el.classList.add('show');if(i===g.reviews.length-1){let t=byId('revTotal');if(t)t.textContent=g.total}},250+i*380));
 }
 function closeReview(){let d=byId('reviewDialog');if(d.open)d.close();resumeAfterModal();render()}
