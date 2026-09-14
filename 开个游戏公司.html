@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>开个游戏公司 V2.1</title>
+<title>开个游戏公司 V2.1.1</title>
 <style>
 /* ============ 基础 ============ */
 :root{--ink:#1d2a3d;--paper:#f5f0e3;--card:#fffaf0;--line:#cfbd98;--blue:#315d8e;--gold:#d6a94b;--aqua:#3f9e7c;--orange:#e07a3f;--pink:#d8607a;--muted:#6f6a5c;--navy:#1c2d4b;
@@ -201,18 +201,14 @@ dialog[open]{display:flex;flex-direction:column}
 dialog::backdrop{background:#17243a85;backdrop-filter:blur(3px)}
 .dhead{display:flex;flex:none;justify-content:space-between;align-items:center;gap:10px;padding:15px 18px 12px;border-bottom:2px solid var(--line)}
 .dhead h2{flex:1;min-width:0;font-size:18px;margin:0}.dhead>button{flex:none;min-height:34px;padding:4px 10px}
-.dbody{flex:1;min-height:0;padding:14px 18px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#cbbb93 transparent;background:linear-gradient(var(--card) 32%,#fffaf000),linear-gradient(#fffaf000,var(--card) 68%) 0 100%,radial-gradient(farthest-side at 50% 0,#17243a24,#17243a00),radial-gradient(farthest-side at 50% 100%,#17243a24,#17243a00) 0 100%;background-repeat:no-repeat;background-size:100% 30px,100% 30px,100% 10px,100% 10px;background-attachment:local,local,scroll,scroll}
+.dbody{flex:1 1 auto;min-height:0;padding:14px 18px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#cbbb93 transparent;background:linear-gradient(var(--card) 32%,#fffaf000),linear-gradient(#fffaf000,var(--card) 68%) 0 100%,radial-gradient(farthest-side at 50% 0,#17243a24,#17243a00),radial-gradient(farthest-side at 50% 100%,#17243a24,#17243a00) 0 100%;background-repeat:no-repeat;background-size:100% 30px,100% 30px,100% 10px,100% 10px;background-attachment:local,local,scroll,scroll}
 .dbody::-webkit-scrollbar{width:9px}.dbody::-webkit-scrollbar-thumb{background:#cbbb93;border-radius:9px;border:2px solid var(--card)}
 .dfoot{display:flex;flex:none;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding:11px 18px;border-top:2px solid var(--line)}
 dialog.wide{width:min(860px,calc(100% - 24px))}
 /* 窄屏或矮窗：对话框铺满可视区，避免被挤成一条缝 */
 @media(max-width:720px),(max-height:660px){
- dialog,dialog.wide{width:100vw;width:100dvw;max-width:none;max-height:100vh;max-height:100dvh;border-radius:0}
+ dialog,dialog.wide{width:100vw;width:100dvw;max-width:none;max-height:100%;max-height:100dvh;border-radius:0}
  .dfoot{padding-bottom:calc(11px + env(safe-area-inset-bottom))}
-}
-/* 手机竖屏：改成从底部升起的面板，拇指够得着按钮 */
-@media(max-width:720px){
- dialog,dialog.wide{margin-top:auto;margin-bottom:0;border-radius:16px 16px 0 0}
 }
 /* 又宽又矮（横屏手机 / 半屏窗口）：把表单摊成多列，减少纵向滚动 */
 @media(min-width:700px) and (max-height:560px){
@@ -295,7 +291,7 @@ dialog.wide{width:min(860px,calc(100% - 24px))}
 <g id="i-plus"><path d="M12 5v14M5 12h14"/></g>
 </defs></svg>
 <section id="start" class="start"><main class="startcard">
- <div class="eyebrow">游戏公司经营模拟 · V2.1</div>
+ <div class="eyebrow">游戏公司经营模拟 · V2.1.1</div>
  <h1>开个游戏公司</h1>
  <p>从三个人和一间小办公室开始：立项、分配开发方向、看着四项品质一点点长起来，等评测杂志出分，再把口碑变成下一款作品的资本。</p>
  <p id="legacyLine" class="legacy hidden"></p>
@@ -693,7 +689,21 @@ function openDlg(title,body,foot='',opt={}){
   byId('dlgClose').classList.toggle('hidden',!!opt.noClose);dlgCancel=opt.onCancel||null;d.classList.toggle('wide',!!opt.wide);
   pauseForModal();if(!d.open)d.showModal();byId('dlgBody').scrollTop=0;
 }
-function closeDlg(){let d=byId('dlg');if(d.open)d.close();dlgCancel=null;resumeAfterModal();if(S)render()}
+function fitDialogHeight(d){
+  if(!d||!d.open)return;let b=d.querySelector('.dbody');if(!b)return;
+  d.style.height='';
+  requestAnimationFrame(()=>{
+    if(!d.open)return;
+    let vh=Math.max(document.documentElement.clientHeight||0,window.innerHeight||0);
+    if(!vh)return;
+    let full=window.innerWidth<=720||vh<=660,squeezed=b.scrollHeight>b.clientHeight+8;
+    if(squeezed&&(full||b.clientHeight<64))d.style.height=Math.round(vh*(full?1:.92))+'px';
+  });
+}
+(function(){if(typeof HTMLDialogElement==='undefined'||!HTMLDialogElement.prototype.showModal)return;let sm=HTMLDialogElement.prototype.showModal;HTMLDialogElement.prototype.showModal=function(){sm.call(this);fitDialogHeight(this)};
+ let rz=()=>document.querySelectorAll('dialog[open]').forEach(fitDialogHeight);
+ addEventListener('resize',rz);addEventListener('orientationchange',rz)})();
+function closeDlg(){let d=byId('dlg');if(d.open){d.close();d.style.height=''}dlgCancel=null;resumeAfterModal();if(S)render()}
 function openHelp(){openDlg('经营说明',`<p>1× 速度下每 5 秒推进一周，暂停时不会产生进度、收入或恢复；打开面板会自动暂停，关闭后回到原速度。</p><p><b>立项</b>：选类型、题材、平台，并把 ${DIR_POINTS} 点开发方向分配到程序 / 画面 / 音乐 / 创意。每种类型看重的维度不同，分配对了，评论家会给出更高分。</p><p><b>开发</b>：项目卡上四项品质实时增长，办公室里会飘出员工每周的贡献。阶段切换时会有三选一的方向抉择；开发完成后进入调试，可修 Bug、打磨或直接发行。</p><p><b>评测</b>：发行后四位评论家各打 1—10 分，总分满 40。总分达到 ${HOF_THRESHOLD} 分的作品进入名人堂。类型 × 题材的契合度在立项时是未知的，发行后才会揭晓并记入图鉴；同一类型做得越多，熟练度越高。</p><p><b>经营</b>：工资每周结算，房租和运营费每月结算。外包能救急但会消耗创作状态；名气每年衰减 5%；粉丝提高销量触达。平台会更迭，竞争公司会真实发行作品、争夺年度金像素奖，也会来挖角。</p><p>2038 年董事会做十年评估，可继续经营，或带着传承经验重新创业。</p>`,'<button class="primary" onclick="closeDlg()">明白了</button>')}
 document.addEventListener('keydown',ev=>{if(ev.key!=='Escape')return;let d=[...document.querySelectorAll('dialog[open]')].pop();if(!d)return;ev.preventDefault();ev.stopPropagation();safeClose(d)},true);
 document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('dialog').forEach(d=>d.addEventListener('cancel',ev=>{ev.preventDefault();safeClose(d)}))});
